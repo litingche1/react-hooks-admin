@@ -6,7 +6,6 @@ const RegisterFrom = (props) => {
 
     }
     const goLogin = () => {
-        console.log(props)
         props.showFromType('login')
     }
     return (

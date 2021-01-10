@@ -2,9 +2,9 @@
  * @Author: Your name
  * @Date:   2021-01-08 00:17:16
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2021-01-09 00:23:10
+ * @Last Modified time: 2021-01-11 00:10:53
  */
-const { override, adjustStyleLoaders,fixBabelImports } = require("customize-cra");
+const { override, adjustStyleLoaders, fixBabelImports } = require("customize-cra");
 module.exports = override(
     fixBabelImports('import', {
         libraryName: 'antd', libraryDirectory: 'es', style: 'css'
