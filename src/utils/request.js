@@ -2,7 +2,7 @@ import axios from 'axios'
 
 //第一步创建实例
 const serves = axios.create({
-    baseURL: '/devApi',
+    baseURL: process.env.REACT_APP_API,
     timeout: 10000,
 
 });
