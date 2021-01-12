@@ -13,9 +13,22 @@ import serves from '../utils/request'
 //   data: {
 //     firstName: 'Fred'
 //   },
+/*
+ * 登录接口
+ */
 export function Login(data) {
     serves.request({
         url: '/login/',
+        method: 'post',
+        data
+    })
+}
+/*
+ * 登录获取验证码
+ */
+export function Getsms(data) {
+    serves.request({
+        url: '/getSms/',
         method: 'post',
         data
     })
