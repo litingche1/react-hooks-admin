@@ -33,3 +33,13 @@ export function Getsms(data) {
         data
     })
 }
+/*
+ * 注册
+ */
+export function Register(data) {
+    serves.request({
+        url: '/register/',
+        method: 'post',
+        data
+    })
+}

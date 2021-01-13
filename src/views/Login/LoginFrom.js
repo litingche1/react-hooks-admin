@@ -12,6 +12,7 @@ const LoginFrom = (props) => {
         console.log(res)
 
     }
+    const module='register'
     const goRegister = () => {
         props.showFromType('register')
     }
@@ -78,7 +79,7 @@ const LoginFrom = (props) => {
                                 />
                             </Col>
                             <Col className="gutter-row" span={9}>
-                                <Code username={username}></Code>
+                                <Code username={username} module={module}></Code>
                             </Col>
                         </Row>
                     </Form.Item>

@@ -32,7 +32,7 @@ const Code = (props) => {
         setcodeText('发送中')
         const requestData = {
             username: props.username,
-            module: 'login'
+            module: props.module
         }
         let res = await Getsms(requestData)
         countDown()
