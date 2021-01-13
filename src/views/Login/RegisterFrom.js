@@ -1,7 +1,9 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import Code from '../../compoents/code'
 const RegisterFrom = (props) => {
+    const [username, setusername] = useState('')
     const onFinish = () => {
 
     }
@@ -25,7 +27,7 @@ const RegisterFrom = (props) => {
                         name="username"
                         rules={[{ required: true, message: 'Please input your Username!' }]}
                     >
-                        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" value={username} onChange={e => { setusername(e.target.value) }} />
                     </Form.Item>
                     <Form.Item
                         name="password"
@@ -56,9 +58,10 @@ const RegisterFrom = (props) => {
                                 />
                             </Col>
                             <Col className="gutter-row" span={9}>
-                                <Button type="primary" danger block>
+                                <Code username={username}></Code>
+                                {/* <Button type="primary" danger block>
                                     获取验证码
-                </Button>
+                </Button> */}
                             </Col>
                         </Row>
                     </Form.Item>

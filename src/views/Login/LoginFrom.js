@@ -2,12 +2,10 @@ import { Fragment, useState } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
-import { Login, Getsms } from '../../api/account'
+import { Login } from '../../api/account'
+import Code from '../../compoents/code'
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
-    const [codeDisadled, setcodeDisadled] = useState(false)
-    const [codeLoading, setcodeLoading] = useState(false)
-    const [codeText, setcodeText] = useState('获取验证码')
     const onFinish = async (values) => {
         console.log(values)
         let res = await Login(values)
@@ -17,48 +15,11 @@ const LoginFrom = (props) => {
     const goRegister = () => {
         props.showFromType('register')
     }
-    //倒计时
-    const countDown = () => {
-        let sec = 60;
-        let timer = ''
-        setcodeLoading(false)
-        setcodeDisadled(true)
-        setcodeText(`${sec}s`)
-        timer = setInterval(() => {
-            sec--
-            if (sec <= 0) {
-                setcodeDisadled(false)
-                setcodeText('重新获取')
-                clearInterval(timer)
-                return false
-            }
-            setcodeText(`${sec}s`)
-        }, 1000)
-    }
-    const getCode = async () => {
-        setcodeLoading(true)
-        setcodeText('发送中')
-        const requestData = {
-            username,
-            module: 'login'
-        }
-        let res = await Getsms(requestData)
-        countDown()
-        console.log(res)
-        console.log(requestData)
-        // Getsms(requestData).then(res => {
-        //     console.log(res)
-        // }).catch(err => {
-        //     setcodeDisadled(false)
-        //     setcodeText('重新获取')
-        // })
-
-    }
     return (
         <Fragment>
             <div className="form-header">
-                <h4 className="column" onClick={goRegister}>注册</h4>
-                <span>登录</span>
+                <h4 className="column op3" onClick={goRegister}>注册</h4>
+                <span className="op1">登录</span>
             </div>
             <div className="form-content">
                 <Form
@@ -117,9 +78,7 @@ const LoginFrom = (props) => {
                                 />
                             </Col>
                             <Col className="gutter-row" span={9}>
-                                <Button type="primary" danger block disabled={codeDisadled} loading={codeLoading} onClick={getCode}>
-                                    {codeText}
-                                </Button>
+                                <Code username={username}></Code>
                             </Col>
                         </Row>
                     </Form.Item>
