@@ -17,7 +17,7 @@ import serves from '../utils/request'
  * 登录接口
  */
 export function Login(data) {
-    serves.request({
+    return serves.request({
         url: '/login/',
         method: 'post',
         data
@@ -27,7 +27,7 @@ export function Login(data) {
  * 登录获取验证码
  */
 export function Getsms(data) {
-    serves.request({
+    return serves.request({
         url: '/getSms/',
         method: 'post',
         data
@@ -37,7 +37,7 @@ export function Getsms(data) {
  * 注册
  */
 export function Register(data) {
-    serves.request({
+    return serves.request({
         url: '/register/',
         method: 'post',
         data

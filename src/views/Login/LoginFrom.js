@@ -4,15 +4,24 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
 import { Login } from '../../api/account'
 import Code from '../../compoents/code'
+import CryptoJs from 'crypto-js';
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
-    const onFinish = async (values) => {
-        console.log(values)
-        let res = await Login(values)
-        console.log(res)
-
+    const [loading, setloading] = useState(false)
+    const onFinish = async (value) => {
+        setloading(true)
+        let params = {
+            username: value.username,
+            password: CryptoJs.MD5(value.password).toString(),
+            code: value.code
+        }
+        let res = await Login(params)
+        if (res.data.resCode === 0) {
+            console.log(res)
+        }
+        setloading(false)
     }
-    const module='register'
+    const module = 'register'
     const goRegister = () => {
         props.showFromType('register')
     }
@@ -85,7 +94,7 @@ const LoginFrom = (props) => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button block type="primary" htmlType="submit" className="login-form-button">
+                        <Button block type="primary" htmlType="submit" className="login-form-button" loading={loading}>
                             登录
                         </Button>
                     </Form.Item>

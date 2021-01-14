@@ -1,18 +1,26 @@
 import { Fragment, useState } from 'react'
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { validate_password, validate_email } from '../../utils/validate'
 import Code from '../../compoents/code'
 import { Register } from '../../api/account'
+import CryptoJs from 'crypto-js';
 const RegisterFrom = (props) => {
     const [username, setusername] = useState('')
     const [password, setpassword] = useState('')
     const [confirmPassword, setconfirmPassword] = useState('')
     const module = 'register'
     const onFinish = async (value) => {
-        console.log(value)
-        let res = await Register(value)
-        console.log(res)
+        let params = {
+            username: value.username,
+            password: CryptoJs.MD5(value.password).toString(),
+            code: value.code
+        }
+        let res = await Register(params)
+        if (res.data.resCode === 0) {
+            message.success(res.data.message)
+            goLogin()
+        }
     }
     const goLogin = () => {
         props.showFromType('login')
@@ -62,6 +70,7 @@ const RegisterFrom = (props) => {
                                         if (confirmPasswords && confirmPasswords !== value) {
                                             return Promise.reject('二次输入密码不一致');
                                         }
+
                                         if (validate_password(value)) {
                                             return Promise.resolve();
                                         } else {
@@ -88,8 +97,6 @@ const RegisterFrom = (props) => {
                     </Form.Item>
                     <Form.Item
                         name="confirmPassword"
-                        value={confirmPassword}
-                        onChange={e => { setconfirmPassword(e.target.value) }}
                         rules={[
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
@@ -98,6 +105,7 @@ const RegisterFrom = (props) => {
                                         if (confirmPasswords && confirmPasswords !== value) {
                                             return Promise.reject('二次输入密码不一致');
                                         }
+                                        return Promise.resolve('');
                                     } else {
                                         return Promise.reject('再次输入密码不能为空!');
                                     }
@@ -111,6 +119,8 @@ const RegisterFrom = (props) => {
                             prefix={<LockOutlined className="site-form-item-icon" />}
                             type="password"
                             placeholder="confirmPassword"
+                            value={confirmPassword}
+                            onChange={e => { setconfirmPassword(e.target.value) }}
                         />
                     </Form.Item>
                     <Form.Item

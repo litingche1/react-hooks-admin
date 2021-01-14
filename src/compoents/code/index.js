@@ -35,9 +35,10 @@ const Code = (props) => {
             module: props.module
         }
         let res = await Getsms(requestData)
+        if (res.data.resCode === 0) {
+            message.success(res.data.message)
+        }
         countDown()
-        console.log(res)
-        console.log(requestData)
     }
     return (
         <Fragment>
