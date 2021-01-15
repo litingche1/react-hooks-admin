@@ -5,6 +5,7 @@ import { passwordCheckRule, validate_email } from '../../utils/validate'
 import { Login } from '../../api/account'
 import Code from '../../compoents/code'
 import CryptoJs from 'crypto-js';
+import { withRouter } from 'react-router-dom';
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
@@ -17,7 +18,9 @@ const LoginFrom = (props) => {
         }
         let res = await Login(params)
         if (res.data.resCode === 0) {
+
             console.log(res)
+            props.history.push('/index')
         }
         setloading(false)
     }
@@ -104,4 +107,4 @@ const LoginFrom = (props) => {
     )
 }
 
-export default LoginFrom
+export default withRouter(LoginFrom)

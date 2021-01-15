@@ -1,2 +1,10 @@
 $color: red;
 $fs12: 42px;
+
+@mixin webkit($attr,$value){
+    -webkit-#{$attr}:$value;
+    -moz-#{$attr}:$value;
+    -ms-#{$attr}:$value;
+    -o-#{$attr}:$value;
+    #{$attr}:$value;
+}
