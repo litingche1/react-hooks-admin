@@ -5,10 +5,12 @@ import { passwordCheckRule, validate_email } from '../../utils/validate'
 import { Login } from '../../api/account'
 import Code from '../../compoents/code'
 import CryptoJs from 'crypto-js';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
+import { setToken } from '../../utils/session'
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
+    const history = useHistory()
     const onFinish = async (value) => {
         setloading(true)
         let params = {
@@ -18,9 +20,8 @@ const LoginFrom = (props) => {
         }
         let res = await Login(params)
         if (res.data.resCode === 0) {
-
-            console.log(res)
-            props.history.push('/index')
+            setToken(res.data.data.token)
+            history.push('/index')
         }
         setloading(false)
     }
