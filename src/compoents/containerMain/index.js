@@ -1,14 +1,15 @@
 import { Switch } from 'react-router-dom'
-import AddUsers from '../../views/user/Add'
-import Users from '../../views/user/Index'
 //私有组件
 import PrivateRouter from '../privateRouter/index'
+import components from './components'
 const Main = (props) => {
     return (
         <Switch>
-            <PrivateRouter exact path="/index/" component={Users}></PrivateRouter>
-            <PrivateRouter exact path="/index/user/list" component={Users}></PrivateRouter>
-            <PrivateRouter exact path="/index/user/add" component={AddUsers}></PrivateRouter>
+            {
+                components.map(item => {
+                    return <PrivateRouter exact key={item.path} path={item.path} component={item.component}></PrivateRouter>
+                })
+            }
         </Switch>
     )
 
