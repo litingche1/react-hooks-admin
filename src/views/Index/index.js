@@ -5,15 +5,16 @@ import LayoutHeader from './components/header'
 import Main from '../../compoents/containerMain'
 import { useState, useEffect } from 'react'
 const { Header, Sider, Content } = Layout;
+const collapsedes = JSON.parse(sessionStorage.getItem('collapsed'))
 const Home = props => {
-    const [collapsed, setcollapsed] = useState(true)
+    const [collapsed, setcollapsed] = useState(false)
     useEffect(() => {
-        setcollapsed(sessionStorage.getItem('collapsed'))
+        setcollapsed(collapsedes ? collapsedes : false)
     }, [])
     //改变菜单收缩的状态
     const changeCollapsed = value => {
+        sessionStorage.setItem('collapsed', JSON.stringify(value))
         setcollapsed(value)
-        sessionStorage.setItem('collapsed', value)
     }
     return (
         <Layout className="layout-wrap">

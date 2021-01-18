@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { getToken, getUsername } from './cookies'
 //第一步创建实例
 const serves = axios.create({
     baseURL: process.env.REACT_APP_API,
@@ -10,6 +10,8 @@ const serves = axios.create({
 //第二步请求拦截
 // 添加请求拦截器
 serves.interceptors.request.use(function (config) {
+    config.headers["Token"] = getToken()
+    config.headers["Username"] = getUsername()
     // 在发送请求之前做些什么
     return config;
 }, function (error) {
