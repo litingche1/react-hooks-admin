@@ -9,3 +9,14 @@ export function DepartmentAddApi(data) {
         data
     })
 }
+
+/*
+ * 部门列表
+ */
+export function DepartmentGetList(data) {
+    return serves.request({
+        url: '/department/list/',
+        method: 'post',
+        data
+    })
+}
