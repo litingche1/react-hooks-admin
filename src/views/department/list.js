@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react'
-import { Form, Input, Button, Table, Switch, message } from 'antd';
+import { Form, Input, Button, Table, Switch, message, Modal } from 'antd';
 import { DepartmentGetList, DepartmentDelete, } from 'api/department'
 // import { DepartmentGetList, DepartmentDelete, } from '../../api/department'
 const DepartmentList = () => {
@@ -7,6 +7,8 @@ const DepartmentList = () => {
     const [pageNumber, setpageNumber] = useState(1)
     const [pageSize, setpageSize] = useState(10)
     const [keyWord, setkeyWord] = useState('')
+    const [isModalVisible, setisModalVisible] = useState(false)
+    const [itemId, seteitemId] = useState()
     useEffect(() => {
         getList()
     }, [])
@@ -58,11 +60,16 @@ const DepartmentList = () => {
         onChange: onCheckbox
     }
     //删除单一项
-    const deleteItem = async id => {
+    const deleteItem = id => {
         if (!id) return false
-        let res = await DepartmentDelete({ id })
+        setisModalVisible(true)
+        seteitemId(id)
+    }
+    const handleOk = async () => {
+        let res = await DepartmentDelete({ id: itemId })
         if (res.data.resCode === 0) {
             message.success(res.data.message)
+            setisModalVisible(false)
             getList()
         }
     }
@@ -80,6 +87,9 @@ const DepartmentList = () => {
             </Form>
             <Table rowSelection={rowSelection} rowKey="id" columns={columns} dataSource={TableData} bordered>
             </Table>
+            <Modal title="提示！" okText="确定" cancelText="取消" visible={isModalVisible} onOk={handleOk} onCancel={() => { setisModalVisible(false) }}>
+                <p className="tex-c">确定删除该信息吗？<strong className="color-red">删除后将无法恢复</strong></p>
+            </Modal>
         </Fragment>
     )
 }
