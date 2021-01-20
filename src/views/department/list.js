@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import { Form, Input, Button, Table, Switch, message } from 'antd';
-import { DepartmentGetList, DepartmentDelete, } from '../../api/department'
+import { DepartmentGetList, DepartmentDelete, } from 'api/department'
+// import { DepartmentGetList, DepartmentDelete, } from '../../api/department'
 const DepartmentList = () => {
     const [TableData, setTableData] = useState([])
     const [pageNumber, setpageNumber] = useState(1)
