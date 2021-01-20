@@ -1,8 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
-import { Form, Input, Button, Table } from 'antd';
-import { DepartmentGetList } from '../../api/department'
+import { Form, Input, Button, Table, Switch, message } from 'antd';
+import { DepartmentGetList, DepartmentDelete, } from '../../api/department'
 const DepartmentList = () => {
-
     const [TableData, setTableData] = useState([])
     const [pageNumber, setpageNumber] = useState(1)
     const [pageSize, setpageSize] = useState(10)
@@ -12,22 +11,59 @@ const DepartmentList = () => {
     }, [])
     const columns = [
         { title: "部门名称", dataIndex: "name", key: "name" },
-        { title: "禁启用", dataIndex: "status", key: "status" },
+        {
+            title: "禁启用", dataIndex: "status", key: "status",
+            render: (text, rowData) => {
+                return <Switch checkedChildren="启用" unCheckedChildren="禁用" defaultChecked={rowData.statys === '1' ? true : false} />
+            }
+        },
         { title: "人员数量", dataIndex: "number", key: "number" },
-        { title: "操作", dataIndex: "operation", key: "operation", width: 215 },
+        {
+            title: "操作", dataIndex: "operation", key: "operation", width: 215,
+            render: (text, rowData) => {
+                return (
+                    <div className="inline-button">
+                        <Button type="primary">编辑</Button>
+                        <Button onClick={e => { deleteItem(rowData.id) }}>删除</Button>
+                    </div>
+                )
+            }
+        },
     ]
+    //获取表格数据
     const getList = async () => {
         const params = {
             pageNumber,
             pageSize
         }
+        if (keyWord) {
+            params.name = keyWord
+        }
         let res = await DepartmentGetList(params)
         setTableData(res.data.data.data)
     }
+    //搜索
     const onFinish = (value) => {
         setpageNumber(1)
         setpageSize(10)
-        console.log(value.name)
+        getList()
+    }
+    //复选框方法
+    const onCheckbox = (value) => {
+        console.log(value)
+    }
+    //表格复选框
+    const rowSelection = {
+        onChange: onCheckbox
+    }
+    //删除单一项
+    const deleteItem = async id => {
+        if (!id) return false
+        let res = await DepartmentDelete({ id })
+        if (res.data.resCode === 0) {
+            message.success(res.data.message)
+            getList()
+        }
     }
     return (
         <Fragment>
@@ -41,7 +77,7 @@ const DepartmentList = () => {
                     </Button>
                 </Form.Item>
             </Form>
-            <Table rowKey="id" columns={columns} dataSource={TableData} bordered>
+            <Table rowSelection={rowSelection} rowKey="id" columns={columns} dataSource={TableData} bordered>
             </Table>
         </Fragment>
     )

@@ -20,3 +20,13 @@ export function DepartmentGetList(data) {
         data
     })
 }
+/*
+ * 部门列表删除
+ */
+export function DepartmentDelete(data) {
+    return serves.request({
+        url: '/department/delete/',
+        method: 'post',
+        data
+    })
+}

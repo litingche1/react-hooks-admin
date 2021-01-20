@@ -3,6 +3,11 @@
 body {
 background:#001529
   }
+  .inline-button{
+    button + button{
+      margin-left: 10px;
+    }
+  }
   
   
   
