@@ -30,3 +30,33 @@ export function DepartmentDelete(data) {
         data
     })
 }
+/*
+ * 部门禁启用
+ */
+export function DepartmentStatus(data) {
+    return serves.request({
+        url: '/department/status/',
+        method: 'post',
+        data
+    })
+}
+/*
+ * 部门详情
+ */
+export function DepartmentDetailed(data) {
+    return serves.request({
+        url: '/department/detailed/',
+        method: 'post',
+        data
+    })
+}
+/*
+ * 部门修改
+ */
+export function DepartmentEdit(data) {
+    return serves.request({
+        url: '/department/edit/',
+        method: 'post',
+        data
+    })
+}

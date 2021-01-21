@@ -1,30 +1,63 @@
 import { Form, Input, Button, InputNumber, Radio, message } from 'antd'
-import { DepartmentAddApi } from '../../api/department'
-import { useState } from 'react'
+import { DepartmentAddApi, DepartmentDetailed, DepartmentEdit } from '../../api/department'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 const DepartmentAdd = () => {
     // const [radio, setradio] = useState(false)
     // const [textArea, settextArea] = useState('')
+    let location = useLocation();
     const [loading, setloading] = useState(false)
     const [form] = Form.useForm();
-    const onFinish = async value => {
-        setloading(true)
+    const [itemId, setitemId] = useState()
+    useEffect(() => {
+        if (location.state) {
+            setitemId(location.state.id)
+            console.log(itemId)
+            getDepartmentDetailed(location.state.id)
+        }
+    }, [])
+    //编辑修改
+    const getDepartmentDetailed = async (id) => {
+        let res = await DepartmentDetailed({ id })
+        if (res.data.resCode === 0) {
+            form.setFieldsValue(res.data.data)
+        }
+    }
+    //添加
+    const addItem = async (data) => {
         try {
-            let res = await DepartmentAddApi(value)
+            let res = await DepartmentAddApi(data)
             if (res.data.resCode === 0) {
                 message.success(res.data.message)
                 form.resetFields()
                 setloading(false)
             }
-            console.log(res)
         }
         catch{
             setloading(false)
             form.resetFields()
         }
     }
-    const onRadioChange = value => {
-        console.log(value)
-        // setradio(true)
+    //修改
+    const modify = async data => {
+        let params = data
+        params.id = itemId
+        try {
+            let res = await DepartmentEdit(params)
+            if (res.data.resCode === 0) {
+                message.success(res.data.message)
+                setloading(false)
+            }
+        }
+        catch{
+            setloading(false)
+        }
+
+    }
+    //表单提交
+    const onFinish = async value => {
+        setloading(true)
+        itemId ? modify(value) : addItem(value)
     }
     const formItemLayout = {
         labelCol: { span: 2 },
@@ -54,12 +87,12 @@ const DepartmentAdd = () => {
                     message: '请选择禁启用状态',
                 },
             ]}>
-                <Radio.Group onChange={onRadioChange}>
+                <Radio.Group>
                     <Radio value={false}>禁启</Radio>
                     <Radio value={true}>启用</Radio>
                 </Radio.Group>
             </Form.Item>
-            <Form.Item label="描述" name="textArea" rules={[
+            <Form.Item label="描述" name="content" rules={[
                 {
                     required: true,
                     message: '请输入描述',
