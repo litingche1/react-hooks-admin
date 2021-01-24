@@ -49,7 +49,7 @@ const DepartmentAdd = () => {
                 setloading(false)
             }
         }
-        catch{
+        catch{ 
             setloading(false)
         }
 
