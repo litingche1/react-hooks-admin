@@ -15,7 +15,7 @@ const FromCommon = (props) => {
     }
     //校验规则
     const itemRules = (item) => {
-        const rules = []
+        let rules = []
         if (item.required) {
             let message = item.message || `${item.label}不能为空`
             rules.push({ required: true, message })
