@@ -41,7 +41,7 @@ const DepartmentList = () => {
                         <div className="inline-button">
                             <Link to={{ pathname: '/index/department/add', state: { id: rowData.id } }}><Button type="primary" onClick={() => { goPage(rowData.id) }}>编辑</Button></Link>
 
-                            <Button className="ml" onClick={e => { deleteList(rowData.id) }}>删除</Button>
+                            <Button className="ml10" onClick={e => { deleteList(rowData.id) }}>删除</Button>
                         </div>
                     )
                 }

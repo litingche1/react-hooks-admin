@@ -8,9 +8,6 @@ background:#001529
       margin-left: 10px;
     }
   }
-  .ml{
-    margin-left: 10px;
-  }
   .pull-right{
     float: right;
   }
@@ -20,8 +17,16 @@ background:#001529
   .color-red{
     color:red
   }
-  .mt10{
-    margin-top: 10px;
-  }
-  
-  
+@for $i from 1 through 100 {
+  .mt#{$i} { margin-top:1px*$i; }
+}
+@for $i from 1 through 100 {
+  .ml#{$i} { margin-left:1px*$i; }
+}
+@for $i from 1 through 100 {
+  .mr#{$i} { margin-left:1px*$i; }
+}
+@for $i from 1 through 100 {
+  .mb#{$i} { margin-left:1px*$i; }
+}
+
