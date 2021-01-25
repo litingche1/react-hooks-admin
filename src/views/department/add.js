@@ -2,6 +2,7 @@ import { Form, Input, Button, InputNumber, Radio, message } from 'antd'
 import { DepartmentAddApi, DepartmentDetailed, DepartmentEdit } from '../../api/department'
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import FromCommon from 'compoents/Form'
 const DepartmentAdd = () => {
     // const [radio, setradio] = useState(false)
     // const [textArea, settextArea] = useState('')
@@ -49,7 +50,7 @@ const DepartmentAdd = () => {
                 setloading(false)
             }
         }
-        catch{ 
+        catch{
             setloading(false)
         }
 
@@ -63,49 +64,69 @@ const DepartmentAdd = () => {
         labelCol: { span: 2 },
         wrapperCol: { span: 20 }
     }
+    const formItem=[
+        {
+            type:'Input',
+            label:'部门名称',
+            required: true,
+            name:'name',
+            rules:[]
+        },
+        {
+            type:'Input',
+            label:'描述',
+            name:'content',
+            required: true,
+            rules:[]
+        }
+    ]
     return (
-        <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={{ radio: false, textArea: '', number: 0, name: '' }}>
-            <Form.Item label="部门名称" name="name" rules={[
-                {
-                    required: true,
-                    message: '请输入部门',
-                },
-            ]}>
-                <Input />
-            </Form.Item>
-            <Form.Item label="人员数量" name="number" rules={[
-                {
-                    required: true,
-                    message: '请输入人员数量',
-                },
-            ]}>
-                <InputNumber min={0} max={100} value={1} />
-            </Form.Item>
-            <Form.Item label="禁启用" name="radio" rules={[
-                {
-                    required: true,
-                    message: '请选择禁启用状态',
-                },
-            ]}>
-                <Radio.Group>
-                    <Radio value={false}>禁启</Radio>
-                    <Radio value={true}>启用</Radio>
-                </Radio.Group>
-            </Form.Item>
-            <Form.Item label="描述" name="content" rules={[
-                {
-                    required: true,
-                    message: '请输入描述',
-                },
-            ]}>
-                <Input.TextArea />
-            </Form.Item>
-            <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading}>
-                    确定
+        <div>
+            <FromCommon formItem={formItem}></FromCommon>
+            <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={{ radio: false, textArea: '', number: 0, name: '' }}>
+                <Form.Item label="部门名称" name="name" rules={[
+                    {
+                        required: true,
+                        message: '请输入部门',
+                    },
+                ]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="人员数量" name="number" rules={[
+                    {
+                        required: true,
+                        message: '请输入人员数量',
+                    },
+                ]}>
+                    <InputNumber min={0} max={100} value={1} />
+                </Form.Item>
+                <Form.Item label="禁启用" name="radio" rules={[
+                    {
+                        required: true,
+                        message: '请选择禁启用状态',
+                    },
+                ]}>
+                    <Radio.Group>
+                        <Radio value={false}>禁启</Radio>
+                        <Radio value={true}>启用</Radio>
+                    </Radio.Group>
+                </Form.Item>
+                <Form.Item label="描述" name="content" rules={[
+                    {
+                        required: true,
+                        message: '请输入描述',
+                    },
+                ]}>
+                    <Input.TextArea />
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                        确定
         </Button>
-            </Form.Item>
-        </Form>
+                </Form.Item>
+            </Form>
+        </div>
+
     )
 }
 
