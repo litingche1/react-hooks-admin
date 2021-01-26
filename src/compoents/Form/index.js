@@ -1,14 +1,19 @@
 import { useEffect, useState, Fragment } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
+const { Option } = Select
 const FromCommon = (props) => {
-    const [form] = Form.useForm();
+    // const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
-    const formItemLayout = {
-        labelCol: { span: 2 },
-        wrapperCol: { span: 20 }
+    const messageRules = {
+        'Input': '请输入',
+        'TextArea': '请输入',
+        'Radio': '请选择',
+        'InputNumber': '请输入',
+        'Select': '请选择',
     }
     //表单提交
     const onFinish = async value => {
+        props.onFinish(value)
         console.log(value)
         // setloading(true)
         // itemId ? modify(value) : addItem(value)
@@ -17,7 +22,7 @@ const FromCommon = (props) => {
     const itemRules = (item) => {
         let rules = []
         if (item.required) {
-            let message = item.message || `${item.label}不能为空`
+            let message = item.message || `${messageRules[item.type]}${item.label}`
             rules.push({ required: true, message })
         }
         if (item.rules && item.rules.length > 0) {
@@ -30,7 +35,16 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input />
+                <Input placeholder={item.Select} />
+            </Form.Item>
+        )
+    }
+    //input
+    const inputNumber = (item) => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+                <InputNumber min={item.min} max={item.max} value={1} />
             </Form.Item>
         )
     }
@@ -39,7 +53,40 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input.TextArea />
+                <Input.TextArea placeholder={item.Select} />
+            </Form.Item>
+        )
+    }
+    //select
+    const select = (item) => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+                <Select style={item.style} placeholder={item.Select}>
+                    {
+                        item.options && item.options.map(elem => {
+                            return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
+                        })
+                    }
+
+                </Select>
+            </Form.Item>
+        )
+    }
+    //radio
+    const radio = item => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+                <Radio.Group>
+                    {
+                        item.options && item.options.map(elem => {
+                            return <Radio value={elem.value} key={`${elem.value}${elem.label}`}>{elem.label}</Radio>
+                        })
+                    }
+
+                </Radio.Group>
+
             </Form.Item>
         )
     }
@@ -49,17 +96,32 @@ const FromCommon = (props) => {
         if (!formItem || (formItem && formItem.length === 0)) { return false }
         const fromList = []
         formItem.map(item => {
-            if (item.type === 'Input') {
-                fromList.push(inputElem(item))
-            } else if (item.type === 'TextArea') {
-                fromList.pus(textAreaElem(item))
+            switch (item.type) {
+                case 'Input':
+                    fromList.push(inputElem(item))
+                    break;
+                case 'TextArea':
+                    fromList.push(textAreaElem(item))
+                    break;
+                case 'Select':
+                    fromList.push(select(item))
+                    break;
+                case 'Radio':
+                    fromList.push(radio(item))
+                    break;
+                case 'InputNumber':
+                    fromList.push(inputNumber(item))
+                    break;
+                default:
+                    fromList.push()
             }
         })
         return fromList
     }
+    const { formItemLayout, initialValues } = props
     return (
         <Fragment>
-            <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={{ radio: false, textArea: '', number: 0, name: '' }}>
+            <Form  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
                 {initFromItem()}
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={loading}>

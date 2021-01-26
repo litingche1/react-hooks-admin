@@ -57,33 +57,68 @@ const DepartmentAdd = () => {
     }
     //表单提交
     const onFinish = async value => {
-        setloading(true)
+        // setloading(true)
         itemId ? modify(value) : addItem(value)
     }
     const formItemLayout = {
         labelCol: { span: 2 },
         wrapperCol: { span: 20 }
     }
-    const formItem=[
+    const formItem = [
         {
-            type:'Input',
-            label:'部门名称',
+            type: 'Input',
+            label: '部门名称',
             required: true,
-            name:'name',
-            rules:[]
+            name: 'name',
+            rules: []
         },
         {
-            type:'Input',
-            label:'描述',
-            name:'content',
+            type: 'InputNumber',
+            label: '人员数量',
+            name: 'number',
+            min: 0,
+            max: 100,
             required: true,
-            rules:[]
-        }
+            rules: []
+        },
+        {
+            type: 'Radio',
+            label: '禁启用',
+            name: 'radio',
+            required: true,
+            rules: [],
+            options: [
+                { value: true, label: '启用' },
+                { value: false, label: '禁用' }
+            ]
+        },
+        {
+            type: 'TextArea',
+            label: '描述',
+            name: 'content',
+            required: true,
+            rules: []
+        },
+
+
+        // {
+        //     type: 'Select',
+        //     label: '下拉框',
+        //     name: 'Select',
+        //     required: true,
+        //     rules: [],
+        //     options: [
+        //         { value: 1, label: '启用' },
+        //         { value: 2, label: '禁用' }
+        //     ]
+
+        // }
+
     ]
     return (
         <div>
-            <FromCommon formItem={formItem}></FromCommon>
-            <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={{ radio: false, textArea: '', number: 0, name: '' }}>
+            <FromCommon formItem={formItem} formItemLayout={formItemLayout} initialValues={{ radio: false, textArea: '', number: 0, name: '' }} onFinish={onFinish}></FromCommon>
+            {/* <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={{ radio: false, textArea: '', number: 0, name: '' }}>
                 <Form.Item label="部门名称" name="name" rules={[
                     {
                         required: true,
@@ -124,7 +159,7 @@ const DepartmentAdd = () => {
                         确定
         </Button>
                 </Form.Item>
-            </Form>
+            </Form> */}
         </div>
 
     )
