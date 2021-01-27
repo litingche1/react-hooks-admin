@@ -2,8 +2,16 @@ import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 const { Option } = Select
 const FromCommon = (props) => {
-    // const [form] = Form.useForm();
+    const { FieldsValue, buttonloading } = props
+    const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
+    useEffect(() => {
+        form.setFieldsValue(FieldsValue)
+    }, [FieldsValue, form])
+    useEffect(() => {
+        setloading(false)
+        form.resetFields()
+    }, [buttonloading, form])
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',
@@ -13,10 +21,8 @@ const FromCommon = (props) => {
     }
     //表单提交
     const onFinish = async value => {
+        setloading(true)
         props.onFinish(value)
-        console.log(value)
-        // setloading(true)
-        // itemId ? modify(value) : addItem(value)
     }
     //校验规则
     const itemRules = (item) => {
@@ -121,12 +127,12 @@ const FromCommon = (props) => {
     const { formItemLayout, initialValues } = props
     return (
         <Fragment>
-            <Form  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
+            <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
                 {initFromItem()}
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={loading}>
                         确定
-        </Button>
+                    </Button>
                 </Form.Item>
             </Form>
 
