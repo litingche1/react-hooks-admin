@@ -1,7 +1,8 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
+import PropTypes from 'prop-types';
 const { Option } = Select
-const FromCommon = (props) => {
+const FromSearch = (props) => {
     const { FieldsValue, buttonloading } = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
@@ -9,9 +10,9 @@ const FromCommon = (props) => {
         form.setFieldsValue(FieldsValue)
     }, [FieldsValue, form])
     useEffect(() => {
-        setloading(false)
+        setloading(buttonloading)
         form.resetFields()
-    }, [buttonloading, form])
+    }, [buttonloading, form,loading])
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',
@@ -127,11 +128,11 @@ const FromCommon = (props) => {
     const { formItemLayout, initialValues } = props
     return (
         <Fragment>
-            <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
+            <Form layout="inline" form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
                 {initFromItem()}
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={loading}>
-                        确定
+                        搜索
                     </Button>
                 </Form.Item>
             </Form>
@@ -140,5 +141,12 @@ const FromCommon = (props) => {
 
     )
 }
-
-export default FromCommon
+//校验数据类型
+FromSearch.propTypes = {
+    formItem: PropTypes.array
+}
+//默认值
+FromSearch.defaultProps = {
+    formItem: []
+}
+export default FromSearch

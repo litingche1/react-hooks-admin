@@ -4,7 +4,6 @@ import { DepartmentStatus } from 'api/department'
 import { Link } from 'react-router-dom'
 import TableCommon from 'compoents/table'
 const DepartmentList = () => {
-    const [keyWord, setkeyWord] = useState('')
 
     const [switchId, setswitchId] = useState()
     const table = useRef()
@@ -46,6 +45,24 @@ const DepartmentList = () => {
                     )
                 }
             },
+        ],
+        formItem:[
+            {
+                type: 'Input',
+                label: '部门名称',
+                required: true,
+                name: 'name',
+                rules: []
+            },
+            // {
+            //     type: 'InputNumber',
+            //     label: '人员数量',
+            //     name: 'number',
+            //     min: 0,
+            //     max: 100,
+            //     required: true,
+            //     rules: []
+            // },
         ]
     }
     //跳转到编辑页面
@@ -64,16 +81,6 @@ const DepartmentList = () => {
     }
     return (
         <Fragment>
-            <Form layout="inline" onFinish={onFinish} style={{ marginBottom: '15px' }}>
-                <Form.Item name="name" label="部门名称" >
-                    <Input placeholder="请输入部门名称" value={keyWord} onChange={e => { setkeyWord(e.target.value) }} />
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        搜索
-                    </Button>
-                </Form.Item>
-            </Form>
             <TableCommon ref={table} batchButton={true} config={tableConfig}></TableCommon>
         </Fragment>
     )

@@ -1,8 +1,9 @@
 import { useState, useEffect, Fragment, forwardRef, useImperativeHandle } from 'react'
-import { Button, Table, Row, Col, Pagination, Modal, message } from 'antd';
+import { Button, Table, Row, Col, Pagination, Modal, message,Form ,Input} from 'antd';
 import { TableList, DeleteList } from 'api/table'
 import PropTypes from 'prop-types';
 import requestUrl from 'utils/requestUrl'
+import FromSearch from 'compoents/FromSearch'
 const TableCommon = forwardRef((props, ref) => {
     const [TableData, setTableData] = useState([])
     const [tableLoading, settableLoading] = useState(false)
@@ -13,15 +14,17 @@ const TableCommon = forwardRef((props, ref) => {
     const [isModalVisible, setisModalVisible] = useState(false)
     const [itemId, setitemId] = useState()
     const [SelectList, setSelectList] = useState([])
+    const [buttonLoading,setbuttonLoading]=useState(false)
+    const [keyWord, setkeyWord] = useState({})
     useEffect(() => {
         if (prepageSize !== pageSize) {
             setpageNumber(1)
         }
-    }, [pageSize])// eslint-disable-line react-hooks/exhaustive-deps
+    }, [pageSize])
     useEffect(() => {
         getList()
-    }, [pageNumber])// eslint-disable-line react-hooks/exhaustive-deps
-    const { columns, url, method, checkbox, rowKey } = props.config
+    }, [pageNumber,keyWord])
+    const { columns, url, method, checkbox, rowKey,formItem } = props.config
     //获取表格数据
     const getList = async () => {
         settableLoading(true)
@@ -34,14 +37,17 @@ const TableCommon = forwardRef((props, ref) => {
             }
 
         }
-        // if (keyWord) {
-        //     params.name = keyWord
-        // }
+        if (keyWord) {
+            for(let key in keyWord){
+                resData.params[key] = keyWord[key]
+            }
+        }
         let res = await TableList(resData)
         if (res.data.resCode === 0) {
             setTableData(res.data.data.data)
             settotal(res.data.data.total)
             settableLoading(false)
+            setbuttonLoading(false)
             prepageSizeset(pageSize)
         }
 
@@ -77,8 +83,8 @@ const TableCommon = forwardRef((props, ref) => {
 
         } else {
             if (SelectList.length <= 0) return false
-            let idlist = SelectList.join()
-            setitemId(idlist)
+            let idList = SelectList.join()
+            setitemId(idList)
         }
         setisModalVisible(true)
 
@@ -100,8 +106,16 @@ const TableCommon = forwardRef((props, ref) => {
             getList()
         }
     }
+    //搜索
+    onsubmit=value=>{
+        setpageNumber(1)
+        setpageSize(10)
+        setkeyWord(value)
+
+    }
     return (
         <Fragment>
+            <FromSearch formItem={formItem} onFinish={onsubmit}  buttonloading={buttonLoading}/>
             <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={TableData} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>
