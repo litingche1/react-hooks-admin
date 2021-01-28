@@ -2,6 +2,7 @@ import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 import PropTypes from 'prop-types';
 const { Option } = Select
+import global from 'utils/global'
 const FromSearch = (props) => {
     const { FieldsValue, buttonloading } = props
     const [form] = Form.useForm();
@@ -111,6 +112,7 @@ const FromSearch = (props) => {
                     fromList.push(textAreaElem(item))
                     break;
                 case 'Select':
+                    item.options=global[item.optionkey]
                     fromList.push(select(item))
                     break;
                 case 'Radio':

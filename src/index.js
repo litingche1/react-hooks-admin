@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import store from './stroe'
+console.log(store.getState())
 ReactDOM.render(
   <App />,
   document.getElementById('root')

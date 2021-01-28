@@ -54,15 +54,15 @@ const DepartmentList = () => {
                 name: 'name',
                 rules: []
             },
-            // {
-            //     type: 'InputNumber',
-            //     label: '人员数量',
-            //     name: 'number',
-            //     min: 0,
-            //     max: 100,
-            //     required: true,
-            //     rules: []
-            // },
+            {
+                type: 'Select',
+                label: '人员数量',
+                name: 'number',
+                required: true,
+                rules: [],
+                optionkey:'select',
+                style:{width:'100px'}
+            },
         ]
     }
     //跳转到编辑页面
