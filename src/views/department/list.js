@@ -1,8 +1,10 @@
 import { useState, Fragment, useRef } from 'react'
-import { Form, Input, Button, Switch, message } from 'antd';
+import { Button, Switch, message } from 'antd';
 import { DepartmentStatus } from 'api/department'
 import { Link } from 'react-router-dom'
 import TableCommon from 'compoents/table'
+import store from 'stroe'
+import { add } from 'stroe/action/config'
 const DepartmentList = () => {
 
     const [switchId, setswitchId] = useState()
@@ -20,6 +22,7 @@ const DepartmentList = () => {
             setswitchId()
         }
     }
+    store.dispatch(add('所有', 'all'))
     const tableConfig = {
         url: 'department',
         method: 'post',
@@ -46,7 +49,7 @@ const DepartmentList = () => {
                 }
             },
         ],
-        formItem:[
+        formItem: [
             {
                 type: 'Input',
                 label: '部门名称',
@@ -60,20 +63,14 @@ const DepartmentList = () => {
                 name: 'number',
                 required: true,
                 rules: [],
-                optionkey:'select',
-                style:{width:'100px'}
+                optionkey: 'select',
+                style: { width: '100px' }
             },
         ]
     }
     //跳转到编辑页面
     const goPage = (id) => {
         console.log(id)
-    }
-    //搜索
-    const onFinish = (value) => {
-        // setpageNumber(1)
-        // setpageSize(10)
-        // getList()
     }
     //删除
     const deleteList = id => {

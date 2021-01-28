@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, forwardRef, useImperativeHandle } from 'react'
-import { Button, Table, Row, Col, Pagination, Modal, message,Form ,Input} from 'antd';
+import { Button, Table, Row, Col, Pagination, Modal, message } from 'antd';
 import { TableList, DeleteList } from 'api/table'
 import PropTypes from 'prop-types';
 import requestUrl from 'utils/requestUrl'
@@ -14,7 +14,7 @@ const TableCommon = forwardRef((props, ref) => {
     const [isModalVisible, setisModalVisible] = useState(false)
     const [itemId, setitemId] = useState()
     const [SelectList, setSelectList] = useState([])
-    const [buttonLoading,setbuttonLoading]=useState(false)
+    const [buttonLoading, setbuttonLoading] = useState(false)
     const [keyWord, setkeyWord] = useState({})
     useEffect(() => {
         if (prepageSize !== pageSize) {
@@ -23,8 +23,9 @@ const TableCommon = forwardRef((props, ref) => {
     }, [pageSize])
     useEffect(() => {
         getList()
-    }, [pageNumber,keyWord])
-    const { columns, url, method, checkbox, rowKey,formItem } = props.config
+    }, [pageNumber, keyWord])
+    console.log(999)
+    const { columns, url, method, checkbox, rowKey, formItem } = props.config
     //获取表格数据
     const getList = async () => {
         settableLoading(true)
@@ -38,7 +39,7 @@ const TableCommon = forwardRef((props, ref) => {
 
         }
         if (keyWord) {
-            for(let key in keyWord){
+            for (let key in keyWord) {
                 resData.params[key] = keyWord[key]
             }
         }
@@ -107,7 +108,7 @@ const TableCommon = forwardRef((props, ref) => {
         }
     }
     //搜索
-    onsubmit=value=>{
+    onsubmit = value => {
         setpageNumber(1)
         setpageSize(10)
         setkeyWord(value)
@@ -115,7 +116,7 @@ const TableCommon = forwardRef((props, ref) => {
     }
     return (
         <Fragment>
-            <FromSearch formItem={formItem} onFinish={onsubmit}  buttonloading={buttonLoading}/>
+            <FromSearch formItem={formItem} onFinish={onsubmit} buttonloading={buttonLoading} />
             <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={TableData} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>

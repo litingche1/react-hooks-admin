@@ -1,8 +1,8 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 import PropTypes from 'prop-types';
+import store from 'stroe'
 const { Option } = Select
-import global from 'utils/global'
 const FromSearch = (props) => {
     const { FieldsValue, buttonloading } = props
     const [form] = Form.useForm();
@@ -13,7 +13,7 @@ const FromSearch = (props) => {
     useEffect(() => {
         setloading(buttonloading)
         form.resetFields()
-    }, [buttonloading, form,loading])
+    }, [buttonloading, form, loading])
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',
@@ -112,7 +112,7 @@ const FromSearch = (props) => {
                     fromList.push(textAreaElem(item))
                     break;
                 case 'Select':
-                    item.options=global[item.optionkey]
+                    item.options = store.getState().config.select
                     fromList.push(select(item))
                     break;
                 case 'Radio':
