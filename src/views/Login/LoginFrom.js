@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState,useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
@@ -11,6 +11,12 @@ const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
     const history = useHistory()
+    useEffect(()=>{
+        return ()=>{
+            setusername('')
+            setloading(false)
+        }
+    },[])
     const onFinish = async (value) => {
         setloading(true)
         let params = {

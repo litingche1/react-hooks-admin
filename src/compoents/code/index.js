@@ -1,14 +1,20 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState,useEffect } from 'react'
 import { Button, message } from 'antd';
 import { Getsms } from '../../api/account'
 const Code = (props) => {
     const [codeDisadled, setcodeDisadled] = useState(false)
     const [codeLoading, setcodeLoading] = useState(false)
     const [codeText, setcodeText] = useState('获取验证码')
+    useEffect(()=>{
+        return ()=>{
+            setcodeDisadled(false)
+        }
+
+    },[])
+    let timer = ''
     //倒计时
     const countDown = () => {
         let sec = 60;
-        let timer = ''
         setcodeLoading(false)
         setcodeDisadled(true)
         setcodeText(`${sec}s`)
