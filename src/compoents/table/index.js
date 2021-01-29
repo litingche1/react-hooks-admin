@@ -3,7 +3,6 @@ import { Button, Table, Row, Col, Pagination, Modal, message } from 'antd';
 import { TableList, DeleteList } from 'api/table'
 import PropTypes from 'prop-types';
 import requestUrl from 'utils/requestUrl'
-import FromSearch from 'compoents/FromSearch'
 const TableCommon = forwardRef((props, ref) => {
     const [TableData, setTableData] = useState([])
     const [tableLoading, settableLoading] = useState(false)
@@ -24,7 +23,7 @@ const TableCommon = forwardRef((props, ref) => {
     useEffect(() => {
         getList()
     }, [pageNumber, keyWord])
-    console.log(999)
+    // console.log(999)
     const { columns, url, method, checkbox, rowKey, formItem } = props.config
     //获取表格数据
     const getList = async () => {
@@ -116,7 +115,7 @@ const TableCommon = forwardRef((props, ref) => {
     }
     return (
         <Fragment>
-            <FromSearch formItem={formItem} onFinish={onsubmit} buttonloading={buttonLoading} />
+            {/*<FromSearch formItem={formItem} onFinish={onsubmit} buttonloading={buttonLoading} />*/}
             <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={TableData} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>

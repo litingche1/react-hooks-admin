@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import TableCommon from 'compoents/table'
 import store from 'stroe'
 import { add } from 'stroe/action/config'
+import FromSearch from 'compoents/FromSearch'
 const DepartmentList = () => {
 
     const [switchId, setswitchId] = useState()
@@ -22,7 +23,7 @@ const DepartmentList = () => {
             setswitchId()
         }
     }
-    store.dispatch(add('所有', 'all'))
+    store.dispatch(add('所有1', 'all'))
     const tableConfig = {
         url: 'department',
         method: 'post',
@@ -49,25 +50,25 @@ const DepartmentList = () => {
                 }
             },
         ],
-        formItem: [
-            {
-                type: 'Input',
-                label: '部门名称',
-                required: true,
-                name: 'name',
-                rules: []
-            },
-            {
-                type: 'Select',
-                label: '人员数量',
-                name: 'number',
-                required: true,
-                rules: [],
-                optionkey: 'select',
-                style: { width: '100px' }
-            },
-        ]
     }
+    const formItem=[
+        {
+            type: 'Input',
+            label: '部门名称',
+            required: true,
+            name: 'name',
+            rules: []
+        },
+        {
+            type: 'Select',
+            label: '人员数量',
+            name: 'number',
+            required: true,
+            rules: [],
+            optionkey: 'select',
+            style: { width: '100px' }
+        },
+    ]
     //跳转到编辑页面
     const goPage = (id) => {
         console.log(id)
@@ -78,6 +79,7 @@ const DepartmentList = () => {
     }
     return (
         <Fragment>
+            <FromSearch formItem={formItem}/>
             <TableCommon ref={table} batchButton={true} config={tableConfig}></TableCommon>
         </Fragment>
     )
