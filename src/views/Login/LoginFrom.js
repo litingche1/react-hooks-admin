@@ -1,4 +1,4 @@
-import { Fragment, useState,useEffect } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
@@ -6,17 +6,20 @@ import { Login } from '../../api/account'
 import Code from '../../compoents/code'
 import CryptoJs from 'crypto-js';
 import { withRouter, useHistory } from 'react-router-dom';
-import { setToken, setUsername } from '../../utils/cookies'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setTokenData, setUserNameData } from 'stroe/action/user'
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
     const history = useHistory()
-    useEffect(()=>{
-        return ()=>{
+    useEffect(() => {
+        return () => {
             setusername('')
             setloading(false)
         }
-    },[])
+    }, [])
+    console.log(props.actions)
     const onFinish = async (value) => {
         setloading(true)
         let params = {
@@ -26,8 +29,9 @@ const LoginFrom = (props) => {
         }
         let res = await Login(params)
         if (res.data.resCode === 0) {
-            setToken(res.data.data.token)
-            setUsername(res.data.data.username)
+            props.actions.setTokenData(res.data.data.token)
+            props.actions.setUserNameData(res.data.data.username)
+
             history.push('/index')
         }
         setloading(false)
@@ -114,5 +118,17 @@ const LoginFrom = (props) => {
         </Fragment>
     )
 }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators({//多个action的处理
+            setTokenData,
+            setUserNameData,
+        }, dispatch)
+    }
+}
+export default connect(
+    null,
+    mapDispatchToProps
+)(withRouter(LoginFrom))
 
-export default withRouter(LoginFrom)
+// export default withRouter(LoginFrom)

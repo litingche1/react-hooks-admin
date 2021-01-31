@@ -3,6 +3,7 @@ import { Button, Table, Row, Col, Pagination, Modal, message } from 'antd';
 import { TableList, DeleteList } from 'api/table'
 import PropTypes from 'prop-types';
 import requestUrl from 'utils/requestUrl'
+import { connect } from 'react-redux'
 const TableCommon = forwardRef((props, ref) => {
     const [TableData, setTableData] = useState([])
     const [tableLoading, settableLoading] = useState(false)
@@ -21,10 +22,10 @@ const TableCommon = forwardRef((props, ref) => {
         }
     }, [pageSize])
     useEffect(() => {
-        getList()
+        // getList()
     }, [pageNumber, keyWord])
     // console.log(999)
-    const { columns, url, method, checkbox, rowKey, formItem } = props.config
+    const { columns, url, method, checkbox, rowKey } = props.config
     //获取表格数据
     const getList = async () => {
         settableLoading(true)
@@ -115,8 +116,7 @@ const TableCommon = forwardRef((props, ref) => {
     }
     return (
         <Fragment>
-            {/*<FromSearch formItem={formItem} onFinish={onsubmit} buttonloading={buttonLoading} />*/}
-            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={TableData} bordered></Table>
+            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={props.list.departmentList} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>
                     {
@@ -151,4 +151,12 @@ TableCommon.propTypes = {
 TableCommon.defaultProps = {
     batchButton: false
 }
-export default TableCommon
+//把store中的数据映射到这个组件变成props
+const mapStateToProps = state => {
+    return {
+        list: state.department
+    }
+}
+export default connect(
+    mapStateToProps,
+)(TableCommon)

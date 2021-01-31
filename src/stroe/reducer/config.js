@@ -1,4 +1,4 @@
-import { addConfig, updateConfig } from '../type'
+import { addConfig} from '../type'
 const config = {
     select: [
         { value: true, label: '启用' },
