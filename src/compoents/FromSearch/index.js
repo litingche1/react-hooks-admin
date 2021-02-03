@@ -8,9 +8,10 @@ import { TableList } from 'api/table'
 import requestUrl from 'utils/requestUrl'
 // import { departmentTable } from 'stroe/type'
 import { addDepartment } from 'stroe/action/department'
+import GetRemoteSelect from 'compoents/Select/index'
 const { Option } = Select
 const FromSearch = (props) => {
-    const { FieldsValue, buttonloading, config, search } = props
+    const { FieldsValue, buttonloading, config, url } = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -22,7 +23,7 @@ const FromSearch = (props) => {
     }, [buttonloading, form, loading])
     useEffect(() => {
         getList({
-            url: 'department'
+            url
         })
     }, [])
     const messageRules = {
@@ -108,16 +109,18 @@ const FromSearch = (props) => {
     //select
     const select = (item) => {
         const rules = itemRules(item)
+        console.log(1112)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Select style={item.style} placeholder={item.Select}>
+                <GetRemoteSelect data={item} url={item.url && item.url} />
+                {/* <Select style={item.style} placeholder={item.Select}>
                     {
                         item.options && item.options.map(elem => {
                             return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
                         })
                     }
 
-                </Select>
+                </Select> */}
             </Form.Item>
         )
     }

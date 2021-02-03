@@ -1,8 +1,9 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
+import GetRemoteSelect from 'compoents/Select/index'
 const { Option } = Select
 const FromCommon = (props) => {
-    const { FieldsValue, buttonloading } = props
+    const { FieldsValue, buttonloading} = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -68,14 +69,15 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Select style={item.style} placeholder={item.Select}>
+               <GetRemoteSelect data={item} url={item.url && item.url} />
+                {/* <Select style={item.style} placeholder={item.Select}>
                     {
                         item.options && item.options.map(elem => {
                             return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
                         })
                     }
 
-                </Select>
+                </Select> */}
             </Form.Item>
         )
     }

@@ -28,6 +28,8 @@ const TableCommon = forwardRef((props, ref) => {
     const { columns, url, method, checkbox, rowKey } = props.config
     //获取表格数据
     const getList = async () => {
+        console.log(requestUrl[url])
+        console.log(url)
         settableLoading(true)
         const resData = {
             url: requestUrl[url],
