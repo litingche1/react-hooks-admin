@@ -23,9 +23,10 @@ const FromSearch = (props) => {
     }, [buttonloading, form, loading])
     useEffect(() => {
         getList({
-            url
+            url: 'jobList'
         })
     }, [])
+    console.log(url)
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',

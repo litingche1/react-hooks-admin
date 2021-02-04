@@ -1,9 +1,8 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 import GetRemoteSelect from 'compoents/Select/index'
-const { Option } = Select
 const FromCommon = (props) => {
-    const { FieldsValue, buttonloading} = props
+    const { FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey } = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -22,6 +21,19 @@ const FromCommon = (props) => {
     }
     //表单提交
     const onFinish = async value => {
+        //格式化数据，value原来的值
+        //         content: "sss"
+        // jobName: "javad"
+        // parentId:{
+        // parentId: 3762
+        // }
+        // radio: false
+        if (fromKey && value[fromKey]) {
+            const dataKey = value[fromKey]
+            delete value[fromKey]
+
+            value = Object.assign(value, dataKey)
+        }
         setloading(true)
         props.onFinish(value)
     }
@@ -64,20 +76,21 @@ const FromCommon = (props) => {
             </Form.Item>
         )
     }
+    //antd表单的自定义或第三方的表单控件
+    const checkPrice = (rule, value) => {
+        if (!value || !value[rule.field]) {
+            return Promise.reject('选项不能为空!');
+
+        }
+        return Promise.resolve();
+
+    }
     //select
     const select = (item) => {
         const rules = itemRules(item)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-               <GetRemoteSelect data={item} url={item.url && item.url} />
-                {/* <Select style={item.style} placeholder={item.Select}>
-                    {
-                        item.options && item.options.map(elem => {
-                            return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
-                        })
-                    }
-
-                </Select> */}
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, { validator: checkPrice }]}>
+                <GetRemoteSelect data={item} url={item.url && item.url} name={item.name} />
             </Form.Item>
         )
     }
@@ -100,7 +113,6 @@ const FromCommon = (props) => {
     }
     //初始化表单
     const initFromItem = () => {
-        const { formItem } = props
         if (!formItem || (formItem && formItem.length === 0)) { return false }
         const fromList = []
         formItem.map(item => {
@@ -126,7 +138,6 @@ const FromCommon = (props) => {
         })
         return fromList
     }
-    const { formItemLayout, initialValues } = props
     return (
         <Fragment>
             <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>

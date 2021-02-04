@@ -64,12 +64,13 @@ const JobAdd = () => {
         labelCol: { span: 2 },
         wrapperCol: { span: 20 }
     }
+    const  fromKey='parentId'
     const formItem = [
         {
             type: 'Select',
             label: '部门名称',
-            // required: true,
-            name: 'name',
+            required: true,
+            name: 'parentId',
             rules: [],
             url: 'getdepartment',
             propsKey: {
@@ -112,7 +113,7 @@ const JobAdd = () => {
 
     return (
         <div>
-            <FromCommon formItem={formItem} formItemLayout={formItemLayout} initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish} buttonloading={buttonloading}></FromCommon>
+            <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout} initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish} buttonloading={buttonloading}></FromCommon>
         </div>
 
     )

@@ -26,7 +26,7 @@ const JobList = () => {
         method: 'post',
         checkbox: true,
         columns: [
-            { title: "职位名称", dataIndex: "name", key: "jobName" },
+            { title: "职位名称", dataIndex: "jobName", key: "jobName" },
             { title: "部门名称", dataIndex: "name", key: "name" },
             {
                 title: "禁启用", dataIndex: "status", key: "status",
@@ -76,7 +76,7 @@ const JobList = () => {
     }
     return (
         <Fragment>
-            <FromSearch formItem={formItem} url={tableConfig.url}/>
+            <FromSearch formItem={formItem} url={tableConfig.url} />
             <TableCommon ref={table} batchButton={true} config={tableConfig}></TableCommon>
         </Fragment>
     )
