@@ -1,6 +1,6 @@
 import { useState, Fragment, useRef } from 'react'
 import { Button, Switch, message } from 'antd';
-import { DepartmentStatus } from 'api/department'
+import { JobStatus } from 'api/job'
 import { Link } from 'react-router-dom'
 import TableCommon from 'compoents/table'
 import FromSearch from 'compoents/FromSearch'
@@ -10,19 +10,19 @@ const JobList = () => {
     const table = useRef()
     //禁启用
     const swithOnChange = async (data) => {
-        setswitchId(data.id)
+        setswitchId(data.jobId)
         let params = {
-            id: data.id,
+            id: data.jobId,
             status: !data.status
         }
-        let res = await DepartmentStatus(params)
+        let res = await JobStatus(params)
         if (res.data.resCode === 0) {
             message.success(res.data.message)
             setswitchId()
         }
     }
     const tableConfig = {
-        url: 'jobList',
+        url: 'job',
         method: 'post',
         checkbox: true,
         columns: [
@@ -31,7 +31,7 @@ const JobList = () => {
             {
                 title: "禁启用", dataIndex: "status", key: "status",
                 render: (status, rowData) => {
-                    return <Switch loading={switchId === rowData.id} onChange={() => { swithOnChange(rowData) }} checkedChildren="启用" unCheckedChildren="禁用" defaultChecked={rowData.status} />
+                    return <Switch loading={switchId === rowData.jobId} onChange={() => { swithOnChange(rowData) }} checkedChildren="启用" unCheckedChildren="禁用" defaultChecked={rowData.status} />
                 }
             },
             {
@@ -39,9 +39,9 @@ const JobList = () => {
                 render: (text, rowData) => {
                     return (
                         <div className="inline-button">
-                            <Link to={{ pathname: '/index/department/add', state: { id: rowData.id } }}><Button type="primary" onClick={() => { goPage(rowData.id) }}>编辑</Button></Link>
+                            <Link to={{ pathname: '/index/job/add', state: { id: rowData.jobId } }}><Button type="primary" onClick={() => { goPage(rowData.jobId) }}>编辑</Button></Link>
 
-                            <Button className="ml10" onClick={e => { deleteList(rowData.id) }}>删除</Button>
+                            <Button className="ml10" onClick={e => { deleteList(rowData.jobId) }}>删除</Button>
                         </div>
                     )
                 }
@@ -50,20 +50,25 @@ const JobList = () => {
     }
     const formItem = [
         {
-            type: 'Input',
+            type: 'SelectData',
             label: '部门名称',
             required: true,
             name: 'name',
-            rules: []
+            rules: [],
+            style: { width: '200px' },
+            url: 'getdepartment',
+            propsKey: {
+                value: 'id',
+                label: 'name'
+            }
         },
         {
-            type: 'Select',
-            label: '人员数量',
-            name: 'number',
+            type: 'Input',
+            label: '职位名称',
+            name: 'jobName',
             required: true,
             rules: [],
-            optionkey: 'select',
-            style: { width: '100px' }
+
         },
     ]
     //跳转到编辑页面
@@ -77,7 +82,7 @@ const JobList = () => {
     return (
         <Fragment>
             <FromSearch formItem={formItem} url={tableConfig.url} />
-            <TableCommon ref={table} batchButton={true} config={tableConfig}></TableCommon>
+            <TableCommon rowKey={record => record.jobId} cref={table} batchButton={true} config={tableConfig}></TableCommon>
         </Fragment>
     )
 }

@@ -9,6 +9,7 @@ import FromSearch from 'compoents/FromSearch'
 const DepartmentList = () => {
 
     const [switchId, setswitchId] = useState()
+    // const [buttonloading,setbuttonloading]=useState(false)
     const table = useRef()
     //禁启用
     const swithOnChange = async (data) => {
@@ -51,22 +52,13 @@ const DepartmentList = () => {
             },
         ],
     }
-    const formItem=[
+    const formItem = [
         {
             type: 'Input',
             label: '部门名称',
             required: true,
             name: 'name',
             rules: []
-        },
-        {
-            type: 'Select',
-            label: '人员数量',
-            name: 'number',
-            required: true,
-            rules: [],
-            optionkey: 'select',
-            style: { width: '100px' }
         },
     ]
     //跳转到编辑页面
@@ -75,12 +67,13 @@ const DepartmentList = () => {
     }
     //删除
     const deleteList = id => {
+        // console.log(table)
         table.current.deleteItem(id)
     }
     return (
         <Fragment>
-            <FromSearch formItem={formItem}/>
-            <TableCommon ref={table} batchButton={true} config={tableConfig}></TableCommon>
+            <FromSearch formItem={formItem} />
+            <TableCommon rowKey={record => record.id} cref={table} batchButton={true} config={tableConfig}></TableCommon>
         </Fragment>
     )
 }

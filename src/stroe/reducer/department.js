@@ -1,7 +1,11 @@
 
 import { departmentTable } from 'stroe/type'
 const department = {
-    departmentList: []
+    departmentList: {
+        data:[],
+        total:0
+    },
+
 }
 const departmentReducer = (state = department, action) => {
     switch (action.type) {

@@ -1,59 +1,50 @@
-import { useState, useEffect, Fragment, forwardRef, useImperativeHandle } from 'react'
+import { useState, useEffect, Fragment, useImperativeHandle } from 'react'
 import { Button, Table, Row, Col, Pagination, Modal, message } from 'antd';
-import { TableList, DeleteList } from 'api/table'
+import { DeleteList } from 'api/table'
 import PropTypes from 'prop-types';
 import requestUrl from 'utils/requestUrl'
+import { getList } from 'utils/fromTable'
 import { connect } from 'react-redux'
-const TableCommon = forwardRef((props, ref) => {
-    const [TableData, setTableData] = useState([])
+import { bindActionCreators } from 'redux'
+import { addDepartment } from 'stroe/action/department'
+let TableCommon = (props) => {
     const [tableLoading, settableLoading] = useState(false)
     const [pageNumber, setpageNumber] = useState(1)
     const [pageSize, setpageSize] = useState(10)
-    const [total, settotal] = useState(0)
+    // const [total, settotal] = useState(props.list.departmentList.total)
     const [prepageSize, prepageSizeset] = useState(10)
     const [isModalVisible, setisModalVisible] = useState(false)
     const [itemId, setitemId] = useState()
     const [SelectList, setSelectList] = useState([])
-    const [buttonLoading, setbuttonLoading] = useState(false)
-    const [keyWord, setkeyWord] = useState({})
     useEffect(() => {
         if (prepageSize !== pageSize) {
             setpageNumber(1)
         }
     }, [pageSize])
     useEffect(() => {
-        // getList()
-    }, [pageNumber, keyWord])
-    // console.log(999)
-    const { columns, url, method, checkbox, rowKey } = props.config
+        getData()
+        return () => {
+            props.actions.addDate({ data: [], total: 0 })
+        }
+    }, [pageNumber])
+    const { columns, url, method, checkbox } = props.config
+    const { total } = props.list.departmentList
+    const { rowKey } = props
     //获取表格数据
-    const getList = async () => {
-        console.log(requestUrl[url])
-        console.log(url)
+    const getData = async () => {
         settableLoading(true)
-        const resData = {
-            url: requestUrl[url],
+        const params = {
+            url,
+            pageNumber,
             method,
-            params: {
-                pageNumber,
-                pageSize
-            }
-
+            pageSize,
         }
-        if (keyWord) {
-            for (let key in keyWord) {
-                resData.params[key] = keyWord[key]
-            }
-        }
-        let res = await TableList(resData)
+        let res = await getList(params)
         if (res.data.resCode === 0) {
-            setTableData(res.data.data.data)
-            settotal(res.data.data.total)
+            props.actions.addDate(res.data.data)
             settableLoading(false)
-            setbuttonLoading(false)
             prepageSizeset(pageSize)
         }
-
     }
     //分页的当前页
     const onChangeCurrnePage = (value, page) => {
@@ -65,6 +56,7 @@ const TableCommon = forwardRef((props, ref) => {
     }
     //复选框方法
     const onCheckbox = (value) => {
+        console.log(value)
         setSelectList(value)
     }
     //表格复选框
@@ -72,13 +64,11 @@ const TableCommon = forwardRef((props, ref) => {
         onChange: onCheckbox
     }
     //父组件调用删除
-    useImperativeHandle(ref, () => {
-        return {
-            deleteItem(id) {
-                deleteList(id)
-            }
+    useImperativeHandle(props.cref, () => ({
+        deleteItem: (id) => {
+            deleteList(id)
         }
-    })
+    }))
     //删除
     const deleteList = id => {
         if (id) {
@@ -106,19 +96,12 @@ const TableCommon = forwardRef((props, ref) => {
             message.success(res.data.message)
             setisModalVisible(false)
             setSelectList([])
-            getList()
+            getData()
         }
-    }
-    //搜索
-    onsubmit = value => {
-        setpageNumber(1)
-        setpageSize(10)
-        setkeyWord(value)
-
     }
     return (
         <Fragment>
-            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={props.list.departmentList} bordered></Table>
+            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={props.list.departmentList.data} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>
                     {
@@ -144,7 +127,7 @@ const TableCommon = forwardRef((props, ref) => {
             </Modal>
         </Fragment>
     )
-})
+}
 //校验数据类型
 TableCommon.propTypes = {
     config: PropTypes.object
@@ -159,6 +142,14 @@ const mapStateToProps = state => {
         list: state.department
     }
 }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators({//多个action的处理
+            addDate: addDepartment,
+        }, dispatch)
+    }
+}
 export default connect(
     mapStateToProps,
+    mapDispatchToProps
 )(TableCommon)

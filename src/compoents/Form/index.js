@@ -1,6 +1,7 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 import GetRemoteSelect from 'compoents/Select/index'
+const { Option } = Select
 const FromCommon = (props) => {
     const { FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey } = props
     const [form] = Form.useForm();
@@ -18,6 +19,7 @@ const FromCommon = (props) => {
         'Radio': '请选择',
         'InputNumber': '请输入',
         'Select': '请选择',
+        'SelectData': '请选择',
     }
     //表单提交
     const onFinish = async value => {
@@ -79,18 +81,34 @@ const FromCommon = (props) => {
     //antd表单的自定义或第三方的表单控件
     const checkPrice = (rule, value) => {
         if (!value || !value[rule.field]) {
-            return Promise.reject('选项不能为空!');
+            return Promise.reject();
 
         }
         return Promise.resolve();
 
     }
     //select
-    const select = (item) => {
+    const selectData = (item) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, { validator: checkPrice }]}>
                 <GetRemoteSelect data={item} url={item.url && item.url} name={item.name} />
+            </Form.Item>
+        )
+    }
+    //select
+    const select = (item) => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+                <Select style={item.style} placeholder={item.Select}>
+                    {
+                        item.options && item.options.map(elem => {
+                            return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
+                        })
+                    }
+
+                </Select>
             </Form.Item>
         )
     }
@@ -122,6 +140,9 @@ const FromCommon = (props) => {
                     break;
                 case 'TextArea':
                     fromList.push(textAreaElem(item))
+                    break;
+                case 'SelectData':
+                    fromList.push(selectData(item))
                     break;
                 case 'Select':
                     fromList.push(select(item))

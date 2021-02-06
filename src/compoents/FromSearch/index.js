@@ -1,32 +1,19 @@
 import { useEffect, useState, Fragment } from 'react'
 import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
 import PropTypes from 'prop-types';
-// import store from 'stroe'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { TableList } from 'api/table'
-import requestUrl from 'utils/requestUrl'
-// import { departmentTable } from 'stroe/type'
 import { addDepartment } from 'stroe/action/department'
 import GetRemoteSelect from 'compoents/Select/index'
+import { getList } from 'utils/fromTable'
 const { Option } = Select
 const FromSearch = (props) => {
-    const { FieldsValue, buttonloading, config, url } = props
+    const { FieldsValue, config } = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
         form.setFieldsValue(FieldsValue)
     }, [FieldsValue, form])
-    useEffect(() => {
-        setloading(buttonloading)
-        form.resetFields()
-    }, [buttonloading, form, loading])
-    useEffect(() => {
-        getList({
-            url: 'jobList'
-        })
-    }, [])
-    console.log(url)
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',
@@ -35,38 +22,27 @@ const FromSearch = (props) => {
         'Select': '请选择',
     }
     //获取表格数据
-    const getList = async (params) => {
-        const resData = {
-            url: requestUrl[params.url],
-            params: {
-                pageNumber: 1,
-                pageSize: 10,
-            }
-
+    const getData = async (data) => {
+        const params = {
+            url: data.url,
+            pageNumber: 1,
+            method: 'post',
+            pageSize: 10,
+            keyWord: data.keyWord,
         }
-        if (params.keyWord) {
-            for (let key in params.keyWord) {
-                resData.params[key] = params.keyWord[key]
-            }
-        }
-        let res = await TableList(resData)
+        let res = await getList(params)
         if (res.data.resCode === 0) {
-            let tableData = res.data.data.data
-            console.log(tableData)
-            props.actions.addDate(tableData)
-            // dispatch({
-            //     type: departmentTable,
-            //     payload: { data: res.data.data.data }
-            // })
+            props.actions.addDate(res.data.data)
+            setloading(false)
+            form.resetFields()
         }
     }
     //表单提交
     const onFinish = async value => {
-        getList({
+        setloading(true)
+        getData({
             url: 'department', keyWord: value
         })
-        // setloading(true)
-        // props.onFinish(value)
     }
     //校验规则
     const itemRules = (item) => {
@@ -110,18 +86,25 @@ const FromSearch = (props) => {
     //select
     const select = (item) => {
         const rules = itemRules(item)
-        console.log(1112)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <GetRemoteSelect data={item} url={item.url && item.url} />
-                {/* <Select style={item.style} placeholder={item.Select}>
+                <Select style={item.style} placeholder={item.Select}>
                     {
                         item.options && item.options.map(elem => {
                             return <Option value={elem.value} key={elem.value}>{elem.label}</Option>
                         })
                     }
 
-                </Select> */}
+                </Select>
+            </Form.Item>
+        )
+    }
+    //selectdata
+    const selectData = (item) => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+                <GetRemoteSelect data={item} url={item.url && item.url} />
             </Form.Item>
         )
     }
@@ -160,6 +143,9 @@ const FromSearch = (props) => {
                 case 'Select':
                     item.options = config.select
                     fromList.push(select(item))
+                    break;
+                case 'SelectData':
+                    fromList.push(selectData(item))
                     break;
                 case 'Radio':
                     fromList.push(radio(item))

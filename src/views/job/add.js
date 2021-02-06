@@ -1,6 +1,5 @@
 import { message } from 'antd'
-import { DepartmentAddApi, DepartmentDetailed, DepartmentEdit } from '../../api/department'
-import { GetJobAdd } from 'api/job'
+import { GetJobAdd, JobDetailed, JobEdit } from 'api/job'
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import FromCommon from 'compoents/Form'
@@ -21,8 +20,9 @@ const JobAdd = () => {
     }, [location.state])
     //编辑修改
     const getDepartmentDetailed = async (id) => {
-        let res = await DepartmentDetailed({ id })
+        let res = await JobDetailed({ id })
         if (res.data.resCode === 0) {
+            console.log(res.data.data)
             setFieldsValue(res.data.data)
         }
     }
@@ -42,9 +42,9 @@ const JobAdd = () => {
     //修改
     const modify = async data => {
         let params = data
-        params.id = itemId
+        params.jobId = itemId
         try {
-            let res = await DepartmentEdit(params)
+            let res = await JobEdit(params)
             if (res.data.resCode === 0) {
                 message.success(res.data.message)
                 setbuttonloading(false)
@@ -64,10 +64,10 @@ const JobAdd = () => {
         labelCol: { span: 2 },
         wrapperCol: { span: 20 }
     }
-    const  fromKey='parentId'
+    const fromKey = 'parentId'
     const formItem = [
         {
-            type: 'Select',
+            type: 'SelectData',
             label: '部门名称',
             required: true,
             name: 'parentId',
@@ -90,7 +90,7 @@ const JobAdd = () => {
         {
             type: 'Radio',
             label: '禁启用',
-            name: 'radio',
+            name: 'status',
             required: true,
             rules: [],
             options: [
