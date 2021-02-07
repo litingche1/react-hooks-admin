@@ -31,10 +31,11 @@ const FromCommon = (props) => {
         // }
         // radio: false
         if (fromKey && value[fromKey]) {
-            const dataKey = value[fromKey]
-            delete value[fromKey]
-
-            value = Object.assign(value, dataKey)
+            if (Object.prototype.toString.call(value[fromKey]) !== "[object String]") {
+                const dataKey = value[fromKey]
+                delete value[fromKey]
+                value = Object.assign(value, dataKey)
+            }
         }
         setloading(true)
         props.onFinish(value)
@@ -80,11 +81,12 @@ const FromCommon = (props) => {
     }
     //antd表单的自定义或第三方的表单控件
     const checkPrice = (rule, value) => {
-        if (!value || !value[rule.field]) {
-            return Promise.reject();
+        if (value || value[rule.field]) {
+            return Promise.resolve();
 
         }
-        return Promise.resolve();
+        return Promise.reject();
+
 
     }
     //select

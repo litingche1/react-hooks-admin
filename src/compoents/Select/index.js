@@ -4,7 +4,7 @@ import requestUrl from 'utils/requestUrl'
 import { TableList } from 'api/table'
 const { Option } = Select
 const GetRemoteSelect = props => {
-    const { data, url, onChange, name } = props
+    const { data, url, onChange, name, value } = props
     const [selectData, setselectData] = useState([])
     const [selectValue, setselectValue] = useState([])
     useEffect(() => {
@@ -14,7 +14,24 @@ const GetRemoteSelect = props => {
             setselectValue([])
         }
     }, [url])
-
+    useEffect(() => {
+        let values = value
+        if (!values) { return false }
+        console.log(Object.prototype.toString.call(values))
+        if (Object.prototype.toString.call(values) === "[object String]") {
+            // console.log(999)
+            // console.log(name)
+            // console.log(values)
+            // values = values[name]
+            setselectValue(value)
+        }
+        console.log(values)
+        // setselectValue(values)
+        return () => {
+            // setselectData([])
+            // setselectValue([])
+        }
+    }, [value])
     const getList = async () => {
         const params = {
             url: requestUrl[url]
