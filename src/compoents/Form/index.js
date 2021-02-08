@@ -89,6 +89,18 @@ const FromCommon = (props) => {
 
 
     }
+    //Solt插槽
+    const Solt = (item) => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+              {
+                //   console.log(props.children)
+                  props.children&&Array.isArray(props.children)?props.children.filter(elm=>elm.ref===item.soltName)[0] : props.children
+              }
+            </Form.Item>
+        )
+    }
     //select
     const selectData = (item) => {
         const rules = itemRules(item)
@@ -149,6 +161,9 @@ const FromCommon = (props) => {
                 case 'Select':
                     fromList.push(select(item))
                     break;
+                    case 'Solt':
+                        fromList.push(Solt(item))
+                        break;
                 case 'Radio':
                     fromList.push(radio(item))
                     break;

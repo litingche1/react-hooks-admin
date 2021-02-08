@@ -19,17 +19,9 @@ const GetRemoteSelect = props => {
         if (!values) { return false }
         console.log(Object.prototype.toString.call(values))
         if (Object.prototype.toString.call(values) === "[object String]") {
-            // console.log(999)
-            // console.log(name)
-            // console.log(values)
-            // values = values[name]
             setselectValue(value)
         }
-        console.log(values)
-        // setselectValue(values)
         return () => {
-            // setselectData([])
-            // setselectValue([])
         }
     }, [value])
     const getList = async () => {
