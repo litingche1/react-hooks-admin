@@ -1,5 +1,7 @@
 import { useEffect, useState, Fragment } from 'react'
-import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
+import { Form, Input, Button, Select, Radio, InputNumber,DatePicker } from 'antd'
+import 'moment/locale/zh-cn';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 import GetRemoteSelect from 'compoents/Select/index'
 const { Option } = Select
 const FromCommon = (props) => {
@@ -143,6 +145,29 @@ const FromCommon = (props) => {
             </Form.Item>
         )
     }
+    //栏目
+    const columnElem=item=>{
+        return(
+            <div className="form-column">
+                <h4>{item.label}</h4>
+            </div>
+        )
+    }
+    //日期
+    const dateElem=item=>{
+        const rules = itemRules(item)
+        return(
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
+
+                <DatePicker locale={locale} format={item.format} picker={item.picker}/>
+
+            </Form.Item>
+            // <div className="form-column">
+            //     <DatePicker onChange={onChange} />
+            // </div>
+        )
+    }
+
     //初始化表单
     const initFromItem = () => {
         if (!formItem || (formItem && formItem.length === 0)) { return false }
@@ -169,6 +194,12 @@ const FromCommon = (props) => {
                     break;
                 case 'InputNumber':
                     fromList.push(inputNumber(item))
+                    break;
+                case 'Column':
+                    fromList.push(columnElem(item))
+                    break;
+                case 'Date':
+                    fromList.push(dateElem(item))
                     break;
                 default:
                     fromList.push()
