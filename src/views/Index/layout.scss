@@ -10,4 +10,6 @@
     border:30px solid #f7f7f7;
     background-color:#fff;
     padding:30px;
+    //max-height:calc(100% - 80px) ;
+    overflow-y: scroll;
 }

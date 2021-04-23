@@ -1,11 +1,12 @@
-import { useEffect, useState, Fragment } from 'react'
-import { Form, Input, Button, Select, Radio, InputNumber,DatePicker } from 'antd'
+import {useEffect, useState, Fragment} from 'react'
+import {Form, Input, Button, Select, Radio, InputNumber, DatePicker} from 'antd'
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import GetRemoteSelect from 'compoents/Select/index'
-const { Option } = Select
+import UploadCom from "compoents/Upload/index"
+const {Option} = Select
 const FromCommon = (props) => {
-    const { FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey } = props
+    const {FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey} = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -22,6 +23,8 @@ const FromCommon = (props) => {
         'InputNumber': '请输入',
         'Select': '请选择',
         'SelectData': '请选择',
+        "Date": '请选择',
+        "Upload": '请上传'
     }
     //表单提交
     const onFinish = async value => {
@@ -47,19 +50,20 @@ const FromCommon = (props) => {
         let rules = []
         if (item.required) {
             let message = item.message || `${messageRules[item.type]}${item.label}`
-            rules.push({ required: true, message })
+            rules.push({required: true, message})
         }
         if (item.rules && item.rules.length > 0) {
-            rules.concat(item.rules)
+            rules=[...rules,...item.rules]
         }
         return rules
     }
     //input
     const inputElem = (item) => {
         const rules = itemRules(item)
+        // console.log(rules)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input placeholder={item.Select} />
+                <Input placeholder={item.Select}/>
             </Form.Item>
         )
     }
@@ -68,7 +72,7 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <InputNumber min={item.min} max={item.max} value={1} />
+                <InputNumber min={item.min} max={item.max} value={1}/>
             </Form.Item>
         )
     }
@@ -77,7 +81,7 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input.TextArea placeholder={item.Select} />
+                <Input.TextArea placeholder={item.Select}/>
             </Form.Item>
         )
     }
@@ -96,10 +100,10 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-              {
-                //   console.log(props.children)
-                  props.children&&Array.isArray(props.children)?props.children.filter(elm=>elm.ref===item.soltName)[0] : props.children
-              }
+                {
+                    //   console.log(props.children)
+                    props.children && Array.isArray(props.children) ? props.children.filter(elm => elm.ref === item.soltName)[0] : props.children
+                }
             </Form.Item>
         )
     }
@@ -107,8 +111,8 @@ const FromCommon = (props) => {
     const selectData = (item) => {
         const rules = itemRules(item)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, { validator: checkPrice }]}>
-                <GetRemoteSelect data={item} url={item.url && item.url} name={item.name} />
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, {validator: checkPrice}]}>
+                <GetRemoteSelect data={item} url={item.url && item.url} name={item.name}/>
             </Form.Item>
         )
     }
@@ -146,31 +150,41 @@ const FromCommon = (props) => {
         )
     }
     //栏目
-    const columnElem=item=>{
-        return(
+    const columnElem = item => {
+        return (
             <div className="form-column">
                 <h4>{item.label}</h4>
             </div>
         )
     }
     //日期
-    const dateElem=item=>{
+    const dateElem = item => {
         const rules = itemRules(item)
-        return(
+        return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
 
                 <DatePicker locale={locale} format={item.format} picker={item.picker}/>
 
             </Form.Item>
-            // <div className="form-column">
-            //     <DatePicker onChange={onChange} />
-            // </div>
         )
     }
+    //图片上传
+    const uploadElem = item => {
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
 
+                <UploadCom name={item.name}/>
+
+            </Form.Item>
+
+        )
+    }
     //初始化表单
     const initFromItem = () => {
-        if (!formItem || (formItem && formItem.length === 0)) { return false }
+        if (!formItem || (formItem && formItem.length === 0)) {
+            return false
+        }
         const fromList = []
         formItem.map(item => {
             switch (item.type) {
@@ -186,9 +200,9 @@ const FromCommon = (props) => {
                 case 'Select':
                     fromList.push(select(item))
                     break;
-                    case 'Solt':
-                        fromList.push(Solt(item))
-                        break;
+                case 'Solt':
+                    fromList.push(Solt(item))
+                    break;
                 case 'Radio':
                     fromList.push(radio(item))
                     break;
@@ -201,6 +215,8 @@ const FromCommon = (props) => {
                 case 'Date':
                     fromList.push(dateElem(item))
                     break;
+                case "Upload":
+                    fromList.push(uploadElem(item))
                 default:
                     fromList.push()
             }
