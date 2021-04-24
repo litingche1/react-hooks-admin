@@ -9,7 +9,6 @@ import requestUrl from 'utils/requestUrl'
 import {TableList} from 'api/table'
 import {nation, face, education} from 'utils/data'
 import {validate_email, validate_phone} from "../../utils/validate";
-
 const StaffAdd = () => {
     //获取路由传参
     let location = useLocation();
