@@ -6,7 +6,7 @@ const RichText = props => {
     const {data, url, onChange, name, value} = props
     // const [loading, setloading] = useState(false)
     // const [imageUrl, setimageUrl] = useState('')
-    const [names, setnames] = useState(name)
+    // const [names, setnames] = useState(name)
     // const [fileToken,setfileToken]=useState("")
     // const [fileKey,setfileKey]=useState("")
     // useEffect(() => {
@@ -22,9 +22,10 @@ const RichText = props => {
     // }
     const triggerChange = (changedValue) => {
         if (onChange) {
-            onChange({
-                [names]: changedValue
-            });
+            onChange(changedValue)
+            // onChange({
+            //     [names]: changedValue
+            // });
         }
     };
     const editorObj = {
@@ -55,6 +56,7 @@ const RichText = props => {
         }
     }
     const handleEditorChange = (value) => {
+        triggerChange(value)
         console.log(value)
     }
     return (

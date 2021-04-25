@@ -80,9 +80,10 @@ const UploadCom = props => {
     // }
     const triggerChange = (changedValue) => {
         if (onChange) {
-            onChange({
-                [names]: changedValue
-            });
+            onChange(changedValue)
+            // onChange({
+            //     [names]: changedValue
+            // });
         }
     };
     const uploadButton = (
