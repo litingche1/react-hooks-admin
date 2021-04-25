@@ -4,6 +4,7 @@ import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import GetRemoteSelect from 'compoents/Select/index'
 import UploadCom from "compoents/Upload/index"
+import RichText from 'compoents/richText/index'
 const {Option} = Select
 const FromCommon = (props) => {
     const {FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey} = props
@@ -24,7 +25,8 @@ const FromCommon = (props) => {
         'Select': '请选择',
         'SelectData': '请选择',
         "Date": '请选择',
-        "Upload": '请上传'
+        "Upload": '请上传',
+        "Editor":'请输入'
     }
     //表单提交
     const onFinish = async value => {
@@ -87,9 +89,8 @@ const FromCommon = (props) => {
     }
     //antd表单的自定义或第三方的表单控件
     const checkPrice = (rule, value) => {
-        if (value || value[rule.field]) {
+        if (value) {
             return Promise.resolve();
-
         }
         return Promise.reject();
 
@@ -180,6 +181,19 @@ const FromCommon = (props) => {
 
         )
     }
+    //富文本
+    const editorElem=item=>{
+        const rules = itemRules(item)
+        return (
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, {validator: checkPrice}]}>
+
+                <RichText name={item.name}/>
+
+            </Form.Item>
+
+        )
+    }
+
     //初始化表单
     const initFromItem = () => {
         if (!formItem || (formItem && formItem.length === 0)) {
@@ -217,6 +231,9 @@ const FromCommon = (props) => {
                     break;
                 case "Upload":
                     fromList.push(uploadElem(item))
+                    break;
+                case "Editor":
+                    fromList.push(editorElem(item))
                 default:
                     fromList.push()
             }

@@ -1,5 +1,6 @@
 import {message, Row, Col, Radio, DatePicker} from 'antd'
 import {GetJobAdd, JobDetailed, JobEdit} from 'api/job'
+import {staffAdd} from 'api/staff'
 import {useState, useEffect} from 'react'
 import {useLocation} from 'react-router-dom'
 import FromCommon from 'compoents/Form'
@@ -8,7 +9,7 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 import requestUrl from 'utils/requestUrl'
 import {TableList} from 'api/table'
 import {nation, face, education} from 'utils/data'
-import {validate_email, validate_phone} from "../../utils/validate";
+import {validate_phone} from "../../utils/validate";
 const StaffAdd = () => {
     //获取路由传参
     let location = useLocation();
@@ -16,6 +17,7 @@ const StaffAdd = () => {
     const [itemId, setitemId] = useState()
     const [FieldsValue, setFieldsValue] = useState({})
     const [selectData, setselectData] = useState([{id: 1, name: '市场部门'}, {id: 2, name: '研发部门'}])
+    const [jobStatusValue,setjobStatusValue]=useState('')
     useEffect(() => {
         if (location.state) {
             setitemId(location.state.id)
@@ -26,7 +28,7 @@ const StaffAdd = () => {
         }
     }, [location.state])
     useEffect(() => {
-        getList()
+        // getList()
     }, [])
     const getList = async () => {
         const params = {
@@ -45,10 +47,11 @@ const StaffAdd = () => {
     //添加
     const addItem = async (data) => {
         try {
-            let res = await GetJobAdd(data)
+            let res = await staffAdd(data)
             if (res.data.resCode === 0) {
                 message.success(res.data.message)
                 setbuttonloading(false)
+                setjobStatusValue('')
             }
         } catch {
             setbuttonloading(false)
@@ -105,10 +108,8 @@ const StaffAdd = () => {
         {
             type: 'Upload',
             label: '头像',
-            required: true,
             name: 'face_img',
         },
-
         {
             type: 'Input',
             label: '身份证号码',
@@ -120,7 +121,6 @@ const StaffAdd = () => {
         {
             type: 'Date ',
             label: '出生年月',
-            required: true,
             name: 'birthday',
             format: 'YYYY/MM/DD',
             picker: '',
@@ -189,6 +189,11 @@ const StaffAdd = () => {
             options: education
         },
         {
+            type: 'Upload',
+            label: '毕业证书',
+            name: 'graduationCard',
+        },
+        {
             type: 'Input',
             label: '微信号',
             required: true,
@@ -219,18 +224,28 @@ const StaffAdd = () => {
             label: "就职信息"
         },
         {
-            type: 'Select',
+            type: 'SelectData',
             label: '职位',
             required: true,
             name: 'job_id',
+            url:'jobAll',
+            propsKey: {
+                value: 'jobId',
+                label: 'jobName'
+            },
             Select: "请选择职位",
             rules: [],
         },
         {
-            type: 'Select',
+            type: 'SelectData',
             label: '所属部门',
             required: true,
+            url:'departmentAll',
             name: 'departmen_id',
+            propsKey: {
+                value: 'id',
+                label: 'name'
+            },
             Select: "请选择所属部门",
             rules: [],
         },
@@ -249,35 +264,57 @@ const StaffAdd = () => {
             name: 'company_email',
             rules: [],
         },
+        {
+            type: 'Editor',
+            label: '描述',
+            required: true,
+            name: 'introduce',
+            rules: [],
+        },
+        {
+            type: 'Radio',
+            label: '禁启用',
+            name: 'status',
+            required: true,
+            rules: [],
+            options: [
+                { value: true, label: '启用' },
+                { value: false, label: '禁用' }
+            ]
+        },
     ]
     //表单的初始化值
     const initialValues = {
         radio: false, textArea: '', number: 0, name: ''
     }
-
+    const onChange=(e)=>{
+        setjobStatusValue(e.target.value)
+    }
     return (
         <div>
             <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout}
                         initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish}
                         buttonloading={buttonloading}>
-                <div ref="jobStatus">
-                    <Row gutter={16}>
+                <div ref="jobStatus" style={{width:'500px'}}>
+                    <Radio.Group onChange={onChange} value={jobStatusValue} style={{width:'100%'}}>
+                    <Row gutter={24}>
                         <Col span={8}>
-                            <Radio>在职</Radio>
+                            <Radio value={'online'}>在职</Radio>
                             <div className="mb15"></div>
                             <DatePicker locale={locale}/>
                         </Col>
                         <Col span={8}>
-                            <Radio>休假</Radio>
+                            <Radio value={'vacation'}>休假</Radio>
                             <div className="mb15"></div>
                             <DatePicker locale={locale}/>
                         </Col>
                         <Col span={8}>
-                            <Radio>离职</Radio>
+                            <Radio value={'quit'}>离职</Radio>
                             <div className="mb15"></div>
                             <DatePicker locale={locale}/>
                         </Col>
                     </Row>
+                    </Radio.Group>
                 </div>
             </FromCommon>
         </div>

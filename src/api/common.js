@@ -10,3 +10,14 @@ export function uploadFile(data) {
         data
     })
 }
+/*
+ * 富文本他图片上传
+ */
+
+export function Upload(data) {
+    return serves.request({
+        url: '/upload/',
+        method: 'post',
+        data
+    })
+}

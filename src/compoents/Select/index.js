@@ -37,9 +37,10 @@ const GetRemoteSelect = props => {
     }
     const triggerChange = (changedValue) => {
         if (onChange) {
-            onChange({
-                [name]: Number(changedValue)
-            });
+            onChange(changedValue);
+            // onChange({
+            //     [name]: Number(changedValue)
+            // });
         }
     };
     return (

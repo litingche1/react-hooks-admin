@@ -22,12 +22,18 @@ const UploadCom = props => {
     //     reader.readAsDataURL(img);
     // }
     const getImgToken=async()=>{
+        const Tokens=localStorage.getItem('setFileToken')
+        if(Tokens){
+            setfileToken(Tokens)
+            return  false
+        }
         const res=await uploadFile({
             ak:'M7OJ0d13ozojgG0tvDJkOzLWwrBIsnC63YKu-B8u',
             sk:'6CT7BlaTuy7KovJ2ck6GrGKTa9Xi7ZYHqROK-EDe',
             buckety:'litingchen-react',
         })
         if(res.data.resCode===0){
+            localStorage.setItem('setFileToken',res.data.data.token)
             setfileToken(res.data.data.token)
         }else{
             message.error('获取七牛云token参数错误')
@@ -74,9 +80,10 @@ const UploadCom = props => {
     // }
     const triggerChange = (changedValue) => {
         if (onChange) {
-            onChange({
-                [names]: changedValue
-            });
+            onChange(changedValue)
+            // onChange({
+            //     [names]: changedValue
+            // });
         }
     };
     const uploadButton = (
