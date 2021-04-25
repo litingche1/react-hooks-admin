@@ -8,7 +8,7 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 import requestUrl from 'utils/requestUrl'
 import {TableList} from 'api/table'
 import {nation, face, education} from 'utils/data'
-import {validate_email, validate_phone} from "../../utils/validate";
+import {validate_phone} from "../../utils/validate";
 const StaffAdd = () => {
     //获取路由传参
     let location = useLocation();
@@ -108,7 +108,12 @@ const StaffAdd = () => {
             required: true,
             name: 'face_img',
         },
-
+        {
+            type: 'Upload',
+            label: '毕业证',
+            required: true,
+            name: 'graduationCard',
+        },
         {
             type: 'Input',
             label: '身份证号码',
@@ -247,6 +252,13 @@ const StaffAdd = () => {
             label: '公司邮箱',
             required: true,
             name: 'company_email',
+            rules: [],
+        },
+        {
+            type: 'Editor',
+            label: '描述',
+            required: true,
+            name: 'describe',
             rules: [],
         },
     ]
