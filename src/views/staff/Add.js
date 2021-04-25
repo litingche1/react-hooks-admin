@@ -119,7 +119,7 @@ const StaffAdd = () => {
             rules: [],
         },
         {
-            type: 'Date ',
+            type: 'Date',
             label: '出生年月',
             name: 'birthday',
             format: 'YYYY/MM/DD',
@@ -250,13 +250,47 @@ const StaffAdd = () => {
             rules: [],
         },
         {
-            type: 'Solt',
+            type: 'FormItemInline',
             label: '职位状态',
             required: true,
             name: 'job_status',
             soltName: 'jobStatus',
             rules: [],
+            inline_item:[
+                {
+                    type:'Date',
+                    label:'入职日期',
+                    name:'job_entry_date',
+                    col:6,
+                    required: true,
+                    style:{width:"100%"}
+                },
+                {
+                    type:'Date',
+                    label:'转正日期',
+                    name:'job_formal_date',
+                    style:{width:"100%"},
+                    required: true,
+                    col:6,
+                },
+                {
+                    type:'Date',
+                    label:'离职日期',
+                    name:'job_quit_date',
+                    style:{width:"100%"},
+                    required: true,
+                    col:6,
+                },
+            ]
         },
+        // {
+        //     type: 'Solt',
+        //     label: '职位状态',
+        //     required: true,
+        //     name: 'job_status',
+        //     soltName: 'jobStatus',
+        //     rules: [],
+        // },
         {
             type: 'Input',
             label: '公司邮箱',

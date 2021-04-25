@@ -1,10 +1,11 @@
 import {useEffect, useState, Fragment} from 'react'
-import {Form, Input, Button, Select, Radio, InputNumber, DatePicker} from 'antd'
+import {Form, Input, Button, Select, Radio, InputNumber, DatePicker,Row,Col} from 'antd'
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import GetRemoteSelect from 'compoents/Select/index'
 import UploadCom from "compoents/Upload/index"
 import RichText from 'compoents/richText/index'
+import 'styles/main.scss'
 const {Option} = Select
 const FromCommon = (props) => {
     const {FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey} = props
@@ -193,51 +194,81 @@ const FromCommon = (props) => {
 
         )
     }
+    //内联
+    const FormItemInlineElem=item=>{
+        const rules = itemRules(item)
+        return (
+            <Row gutter={24}>
+                <Col span={2} className="ant-form-item" style={{textAlign:"right"}}>
+                    <div className="ant-form-item-label">
+                        <label for="name" className="ant-form-item-required">{item.label}</label>
+                    </div>
+                </Col>
+                <Col span={22}>
+                    <Row>
+                        {
+                            item.inline_item.map(elem=>{
+                                return(
+                                    <Col span={elem.col} className="form-item-inline-control">{createControl(elem)}</Col>
+                                )
+                            })
+                        }
+                    </Row>
+                </Col>
+            </Row>
+        )
+
+    }
+//创建表单
+    const createControl=item=>{
+        switch (item.type) {
+            case 'Input':
+                return inputElem(item)
+                break;
+            case 'TextArea':
+                return textAreaElem(item)
+                break;
+            case 'SelectData':
+                return selectData(item)
+                break;
+            case 'Select':
+                return select(item)
+                break;
+            case 'Solt':
+                return Solt(item)
+                break;
+            case 'Radio':
+                return radio(item)
+                break;
+            case 'InputNumber':
+                return inputNumber(item)
+                break;
+            case 'Column':
+                return columnElem(item)
+                break;
+            case 'Date':
+                return dateElem(item)
+                break;
+            case "Upload":
+                return uploadElem(item)
+                break;
+            case "Editor":
+                return editorElem(item)
+                break;
+            case "FormItemInline":
+                return FormItemInlineElem(item)
+                break
+            default:
+                return
+        }
+    }
 
     //初始化表单
     const initFromItem = () => {
         if (!formItem || (formItem && formItem.length === 0)) {
             return false
         }
-        const fromList = []
-        formItem.map(item => {
-            switch (item.type) {
-                case 'Input':
-                    fromList.push(inputElem(item))
-                    break;
-                case 'TextArea':
-                    fromList.push(textAreaElem(item))
-                    break;
-                case 'SelectData':
-                    fromList.push(selectData(item))
-                    break;
-                case 'Select':
-                    fromList.push(select(item))
-                    break;
-                case 'Solt':
-                    fromList.push(Solt(item))
-                    break;
-                case 'Radio':
-                    fromList.push(radio(item))
-                    break;
-                case 'InputNumber':
-                    fromList.push(inputNumber(item))
-                    break;
-                case 'Column':
-                    fromList.push(columnElem(item))
-                    break;
-                case 'Date':
-                    fromList.push(dateElem(item))
-                    break;
-                case "Upload":
-                    fromList.push(uploadElem(item))
-                    break;
-                case "Editor":
-                    fromList.push(editorElem(item))
-                default:
-                    fromList.push()
-            }
-        })
+        let fromList=formItem.map(item => createControl(item))
         return fromList
     }
     return (

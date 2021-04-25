@@ -13,8 +13,10 @@ const RichText = props => {
     //
     // }, [url])
     // useEffect(() => {
-    //
-    // }, [value])
+    //     return ()=>{
+    //        localStorage.clear('')
+    //     }
+    // }, [])
     // const getBase64 = (img, callback) => {
     //     const reader = new FileReader();
     //     reader.addEventListener('load', () => callback(reader.result));
