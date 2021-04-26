@@ -66,7 +66,7 @@ const RichText = props => {
             inline={false}
             selector='editorStateRef'  // 选择器
             apiKey='官网上申请的key值'
-            initialValue={"1111"}
+            initialValue={""}
             init={{...editorObj}}
             onEditorChange={handleEditorChange}
         />

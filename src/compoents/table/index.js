@@ -73,7 +73,6 @@ let TableCommon = (props) => {
     const deleteList = id => {
         if (id) {
             setitemId(id)
-
         } else {
             if (SelectList.length <= 0) return false
             let idList = SelectList.join()

@@ -9,3 +9,13 @@ export function staffAdd(data) {
         data
     })
 }
+/*
+ * 禁启用
+ */
+export function staffStatus(data) {
+    return serves.request({
+        url: '/staff/status/',
+        method: 'post',
+        data
+    })
+}

@@ -27,9 +27,9 @@ const StaffAdd = () => {
             setbuttonloading(false)
         }
     }, [location.state])
-    useEffect(() => {
-        // getList()
-    }, [])
+    // useEffect(() => {
+    //     // getList()
+    // }, [])
     const getList = async () => {
         const params = {
             url: requestUrl['getdepartment']
@@ -329,27 +329,27 @@ const StaffAdd = () => {
             <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout}
                         initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish}
                         buttonloading={buttonloading}>
-                <div ref="jobStatus" style={{width:'500px'}}>
-                    <Radio.Group onChange={onChange} value={jobStatusValue} style={{width:'100%'}}>
-                    <Row gutter={24}>
-                        <Col span={8}>
-                            <Radio value={'online'}>在职</Radio>
-                            <div className="mb15"></div>
-                            <DatePicker locale={locale}/>
-                        </Col>
-                        <Col span={8}>
-                            <Radio value={'vacation'}>休假</Radio>
-                            <div className="mb15"></div>
-                            <DatePicker locale={locale}/>
-                        </Col>
-                        <Col span={8}>
-                            <Radio value={'quit'}>离职</Radio>
-                            <div className="mb15"></div>
-                            <DatePicker locale={locale}/>
-                        </Col>
-                    </Row>
-                    </Radio.Group>
-                </div>
+                {/*<div ref="jobStatus" style={{width:'500px'}}>*/}
+                {/*    <Radio.Group onChange={onChange} value={jobStatusValue} style={{width:'100%'}}>*/}
+                {/*    <Row gutter={24}>*/}
+                {/*        <Col span={8}>*/}
+                {/*            <Radio value={'online'}>在职</Radio>*/}
+                {/*            <div className="mb15"></div>*/}
+                {/*            <DatePicker locale={locale}/>*/}
+                {/*        </Col>*/}
+                {/*        <Col span={8}>*/}
+                {/*            <Radio value={'vacation'}>休假</Radio>*/}
+                {/*            <div className="mb15"></div>*/}
+                {/*            <DatePicker locale={locale}/>*/}
+                {/*        </Col>*/}
+                {/*        <Col span={8}>*/}
+                {/*            <Radio value={'quit'}>离职</Radio>*/}
+                {/*            <div className="mb15"></div>*/}
+                {/*            <DatePicker locale={locale}/>*/}
+                {/*        </Col>*/}
+                {/*    </Row>*/}
+                {/*    </Radio.Group>*/}
+                {/*</div>*/}
             </FromCommon>
         </div>
 
