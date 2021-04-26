@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment } from 'react'
-import { Form, Input, Button, Select, Radio, InputNumber } from 'antd'
+import { Form, Input, Button, Select, Radio, InputNumber,Row,Col } from 'antd'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -159,17 +159,26 @@ const FromSearch = (props) => {
         })
         return fromList
     }
-    const { formItemLayout, initialValues } = props
+    const { formItemLayout, initialValues,submitButton } = props
     return (
         <Fragment>
-            <Form layout="inline" form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
-                {initFromItem()}
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        搜索
-                    </Button>
-                </Form.Item>
-            </Form>
+            <Row>
+                <Col span={20}><Form layout="inline" form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
+                    {initFromItem()}
+                    <Form.Item>
+                        {
+                            submitButton? <Button type="primary" htmlType="submit" loading={loading}>搜索</Button> : ''
+                        }
+
+                    </Form.Item>
+                </Form></Col>
+                <Col span={4}>
+                    <div className="pull-right">
+                        {props.children}
+                    </div>
+                    </Col>
+            </Row>
+
 
         </Fragment>
 
@@ -177,11 +186,13 @@ const FromSearch = (props) => {
 }
 //校验数据类型
 FromSearch.propTypes = {
-    formItem: PropTypes.array
+    formItem: PropTypes.array,
+    // submitButton:PropTypes.
 }
 //默认值
 FromSearch.defaultProps = {
-    formItem: []
+    formItem: [],
+    submitButton:true,
 }
 const mapStateToProps = (state) => ({
     config: state.config

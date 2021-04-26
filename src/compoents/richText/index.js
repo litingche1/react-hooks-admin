@@ -3,25 +3,17 @@ import {Editor} from '@tinymce/tinymce-react'
 import {Upload} from 'api/common'
 
 const RichText = props => {
-    const {data, url, onChange, name, value} = props
-    // const [loading, setloading] = useState(false)
-    // const [imageUrl, setimageUrl] = useState('')
-    // const [names, setnames] = useState(name)
-    // const [fileToken,setfileToken]=useState("")
-    // const [fileKey,setfileKey]=useState("")
-    // useEffect(() => {
-    //
-    // }, [url])
-    // useEffect(() => {
-    //     return ()=>{
-    //        localStorage.clear('')
-    //     }
-    // }, [])
-    // const getBase64 = (img, callback) => {
-    //     const reader = new FileReader();
-    //     reader.addEventListener('load', () => callback(reader.result));
-    //     reader.readAsDataURL(img);
-    // }
+    const {data, url, onChange, name, initValue} = props
+    const [richValue, setrichValue] = useState("")
+    useEffect(() => {
+        const data=initValue[name]
+        data?setrichValue(data):setrichValue('')
+        // let data = initValue[name]
+        // if (data) {
+        //     setrichValue(data)
+        // }
+        console.log(initValue)
+    }, [initValue])
     const triggerChange = (changedValue) => {
         if (onChange) {
             onChange(changedValue)
@@ -66,7 +58,7 @@ const RichText = props => {
             inline={false}
             selector='editorStateRef'  // 选择器
             apiKey='官网上申请的key值'
-            initialValue={""}
+            initialValue={richValue}
             init={{...editorObj}}
             onEditorChange={handleEditorChange}
         />

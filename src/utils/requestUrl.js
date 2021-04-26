@@ -8,6 +8,7 @@ const requestUrl = {
     'jobdelete': '/job/delete/',
     'staff':'/staff/list/',
     'staffdelete': '/staff/delete/',
+    "userList":'/user/list/'
 }
 
 export default requestUrl

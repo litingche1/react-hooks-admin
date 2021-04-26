@@ -1,23 +1,19 @@
 import {message, Row, Col, Radio, DatePicker} from 'antd'
-import {GetJobAdd, JobDetailed, JobEdit} from 'api/job'
-import {staffAdd} from 'api/staff'
+import {staffAdd, staffDetailed, staffEdit} from 'api/staff'
 import {useState, useEffect} from 'react'
 import {useLocation} from 'react-router-dom'
 import FromCommon from 'compoents/Form'
 import 'moment/locale/zh-cn';
-import locale from 'antd/es/date-picker/locale/zh_CN';
-import requestUrl from 'utils/requestUrl'
-import {TableList} from 'api/table'
 import {nation, face, education} from 'utils/data'
 import {validate_phone} from "../../utils/validate";
+import moment from 'moment';
+
 const StaffAdd = () => {
     //获取路由传参
     let location = useLocation();
     const [buttonloading, setbuttonloading] = useState(false)
     const [itemId, setitemId] = useState()
     const [FieldsValue, setFieldsValue] = useState({})
-    const [selectData, setselectData] = useState([{id: 1, name: '市场部门'}, {id: 2, name: '研发部门'}])
-    const [jobStatusValue,setjobStatusValue]=useState('')
     useEffect(() => {
         if (location.state) {
             setitemId(location.state.id)
@@ -27,21 +23,19 @@ const StaffAdd = () => {
             setbuttonloading(false)
         }
     }, [location.state])
-    // useEffect(() => {
-    //     // getList()
-    // }, [])
-    const getList = async () => {
-        const params = {
-            url: requestUrl['getdepartment']
-        }
-        let res = await TableList(params)
-        setselectData(res.data.data.data)
-    }
     //编辑修改
     const getDepartmentDetailed = async (id) => {
-        let res = await JobDetailed({id})
+        let res = await staffDetailed({id})
         if (res.data.resCode === 0) {
-            setFieldsValue(res.data.data)
+            const data = res.data.data
+            //处理日期格式
+            const basisData = {
+                birthday: data.birthday ? moment(data.birthday) : null,
+                job_entry_date: data.birthday ? moment(data.job_entry_date) : null,
+                job_formal_date: data.birthday ? moment(data.job_formal_date) : null,
+                job_quit_date: data.birthday ? moment(data.job_quit_date) : null,
+            }
+            setFieldsValue({...data, ...basisData})
         }
     }
     //添加
@@ -51,8 +45,15 @@ const StaffAdd = () => {
             if (res.data.resCode === 0) {
                 message.success(res.data.message)
                 setbuttonloading(false)
-                setjobStatusValue('')
+                const abcData={
+                    face_img: '',
+                    diploma_img: '',
+                    introduce: ''
+                }
+                setFieldsValue({...FieldsValue,...abcData})
+                console.log()
             }
+
         } catch {
             setbuttonloading(false)
         }
@@ -60,9 +61,9 @@ const StaffAdd = () => {
     //修改
     const modify = async data => {
         let params = data
-        params.jobId = itemId
+        params.id = itemId
         try {
-            let res = await JobEdit(params)
+            let res = await staffEdit(params)
             if (res.data.resCode === 0) {
                 message.success(res.data.message)
                 setbuttonloading(false)
@@ -135,7 +136,6 @@ const StaffAdd = () => {
             rules: [
                 () => ({
                     validator(_, value) {
-                        console.log(8888888)
                         if (validate_phone(value)) {
                             return Promise.resolve();
                         }
@@ -191,7 +191,7 @@ const StaffAdd = () => {
         {
             type: 'Upload',
             label: '毕业证书',
-            name: 'graduationCard',
+            name: 'diploma_img',
         },
         {
             type: 'Input',
@@ -199,14 +199,6 @@ const StaffAdd = () => {
             required: true,
             name: 'wechat',
             Select: "请输入微信号",
-            rules: [],
-        },
-        {
-            type: 'Input',
-            label: '电话',
-            required: true,
-            name: 'iphone',
-            Select: "请输入电话",
             rules: [],
         },
         {
@@ -228,7 +220,7 @@ const StaffAdd = () => {
             label: '职位',
             required: true,
             name: 'job_id',
-            url:'jobAll',
+            url: 'jobAll',
             propsKey: {
                 value: 'jobId',
                 label: 'jobName'
@@ -240,7 +232,7 @@ const StaffAdd = () => {
             type: 'SelectData',
             label: '所属部门',
             required: true,
-            url:'departmentAll',
+            url: 'departmentAll',
             name: 'departmen_id',
             propsKey: {
                 value: 'id',
@@ -256,30 +248,30 @@ const StaffAdd = () => {
             name: 'job_status',
             soltName: 'jobStatus',
             rules: [],
-            inline_item:[
+            inline_item: [
                 {
-                    type:'Date',
-                    label:'入职日期',
-                    name:'job_entry_date',
-                    col:6,
+                    type: 'Date',
+                    label: '入职日期',
+                    name: 'job_entry_date',
+                    col: 6,
                     required: true,
-                    style:{width:"100%"}
+                    style: {width: "100%"}
                 },
                 {
-                    type:'Date',
-                    label:'转正日期',
-                    name:'job_formal_date',
-                    style:{width:"100%"},
+                    type: 'Date',
+                    label: '转正日期',
+                    name: 'job_formal_date',
+                    style: {width: "100%"},
                     required: true,
-                    col:6,
+                    col: 6,
                 },
                 {
-                    type:'Date',
-                    label:'离职日期',
-                    name:'job_quit_date',
-                    style:{width:"100%"},
+                    type: 'Date',
+                    label: '离职日期',
+                    name: 'job_quit_date',
+                    style: {width: "100%"},
                     required: true,
-                    col:6,
+                    col: 6,
                 },
             ]
         },
@@ -312,8 +304,8 @@ const StaffAdd = () => {
             required: true,
             rules: [],
             options: [
-                { value: true, label: '启用' },
-                { value: false, label: '禁用' }
+                {value: true, label: '启用'},
+                {value: false, label: '禁用'}
             ]
         },
     ]
@@ -321,8 +313,8 @@ const StaffAdd = () => {
     const initialValues = {
         radio: false, textArea: '', number: 0, name: ''
     }
-    const onChange=(e)=>{
-        setjobStatusValue(e.target.value)
+    const onChange = (e) => {
+        // setjobStatusValue(e.target.value)
     }
     return (
         <div>

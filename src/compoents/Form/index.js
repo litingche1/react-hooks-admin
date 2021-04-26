@@ -176,7 +176,7 @@ const FromCommon = (props) => {
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
 
-                <UploadCom name={item.name}/>
+                <UploadCom name={item.name} initValue={FieldsValue}/>
 
             </Form.Item>
 
@@ -188,7 +188,7 @@ const FromCommon = (props) => {
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, {validator: checkPrice}]}>
 
-                <RichText name={item.name}/>
+                <RichText name={item.name} initValue={FieldsValue}/>
 
             </Form.Item>
 
@@ -271,14 +271,16 @@ const FromCommon = (props) => {
         let fromList=formItem.map(item => createControl(item))
         return fromList
     }
+    const { submitButton } = props
     return (
         <Fragment>
             <Form form={form}  {...formItemLayout} onFinish={onFinish} initialValues={initialValues}>
                 {initFromItem()}
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        确定
-                    </Button>
+                    {
+                        submitButton?<Button type="primary" htmlType="submit" loading={loading}>确定</Button> : ''
+                    }
+
                 </Form.Item>
             </Form>
 
@@ -286,5 +288,7 @@ const FromCommon = (props) => {
 
     )
 }
-
+FromCommon.defaultProps = {
+    submitButton:true,
+}
 export default FromCommon

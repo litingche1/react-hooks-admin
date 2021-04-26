@@ -4,15 +4,20 @@ import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 // import requestUrl from 'utils/requestUrl'
 import {uploadFile} from 'api/common'
 const UploadCom = props => {
-    const {data, url, onChange, name, value} = props
+    const {data, url, onChange, name, initValue} = props
     const [loading, setloading] = useState(false)
     const [imageUrl, setimageUrl] = useState('')
     const [names, setnames] = useState(name)
     const [fileToken,setfileToken]=useState("")
     const [fileKey,setfileKey]=useState("")
     useEffect(() => {
-
-    }, [url])
+        const data=initValue[name]
+        data?setimageUrl(data):setimageUrl('')
+        // if(initValue){
+        //     setimageUrl()
+        // }
+// console.log(initValue,name)
+    }, [initValue])
     useEffect(() => {
         return ()=>{
             localStorage.removeItem('setFileToken')
