@@ -1,8 +1,8 @@
-import {useEffect, useState, useImperativeHandle} from 'react'
+import {useEffect, useState, useImperativeHandle,useRef} from 'react'
 import {Modal, message} from 'antd';
 import FromCommon from 'compoents/Form'
 import {validate_phone, validate_password} from "utils/validate";
-import {userAdd} from 'api/user'
+import {userAdd,userDetailed} from 'api/user'
 import CryptoJs from 'crypto-js';
 
 const ModalComm = props => {
@@ -10,16 +10,27 @@ const ModalComm = props => {
     const [isModalVisible, setisModalVisible] = useState(false)
     const [buttonloading, setbuttonloading] = useState(false)
     const [FieldsValue, setFieldsValue] = useState({})
+    const From = useRef()
     const handleCancel = () => {
         setisModalVisible(false)
     }
     const open = (value) => {
         setisModalVisible(value)
+        From.current.Rreset()
+    }
+    //获取表单详情数据
+    const getUserDetailed= async (data)=>{
+        if(!data.id) return
+        let res=await userDetailed({id:data.id})
+
+        setFieldsValue(res.data.data)
+        console.log(res.data)
     }
     //父组件调用删除
     useImperativeHandle(props.cref, () => ({
         openModal: (data) => {
-            open(data)
+            open(data.status)
+            getUserDetailed(data)
         }
     }))
     //表单提交
@@ -131,7 +142,7 @@ const ModalComm = props => {
         {
             type: 'Radio',
             label: '禁启用状态',
-            name: 'sex',
+            name: 'status',
             required: true,
             rules: [],
             options: [
@@ -150,7 +161,7 @@ const ModalComm = props => {
         <Modal title="用户新增/修改" visible={isModalVisible} onCancel={handleCancel} footer={null}>
             <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout}
                         initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish}
-                        buttonloading={buttonloading}>
+                        buttonloading={buttonloading} cref={From}>
             </FromCommon>
         </Modal>
 

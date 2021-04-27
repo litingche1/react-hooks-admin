@@ -1,4 +1,4 @@
-import {useEffect, useState, Fragment} from 'react'
+import {useEffect, useState, Fragment,useImperativeHandle} from 'react'
 import {Form, Input, Button, Select, Radio, InputNumber, DatePicker,Row,Col} from 'antd'
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -16,8 +16,8 @@ const FromCommon = (props) => {
     }, [FieldsValue, form])
     useEffect(() => {
         setloading(false)
-        form.resetFields()
-    }, [buttonloading, form])
+        resetFrom()
+    }, [buttonloading])
     const messageRules = {
         'Input': '请输入',
         'TextArea': '请输入',
@@ -29,6 +29,14 @@ const FromCommon = (props) => {
         "Upload": '请上传',
         "Editor":'请输入'
     }
+    const resetFrom=()=>{
+        form.resetFields()
+    }
+    useImperativeHandle(props.cref, () => ({
+        Rreset: () => {
+            resetFrom()
+        },
+    }))
     //表单提交
     const onFinish = async value => {
         //格式化数据，value原来的值

@@ -95,7 +95,6 @@ let TableCommon = (props) => {
             }
 
         }
-        console.log(resData.url)
         let res = await DeleteList(resData)
         if (res.data.resCode === 0) {
             message.success(res.data.message)

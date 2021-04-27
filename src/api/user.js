@@ -19,3 +19,13 @@ export function userstatus(data) {
         data
     })
 }
+/*
+ * 用户详情
+ */
+export function userDetailed(data) {
+    return serves.request({
+        url: '/user/detailed/',
+        method: 'post',
+        data
+    })
+}

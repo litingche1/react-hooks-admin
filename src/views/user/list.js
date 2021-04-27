@@ -1,7 +1,6 @@
 import {useState, Fragment, useRef} from 'react'
 import {Button, Switch, message} from 'antd';
 import {userstatus} from 'api/user'
-import {Link} from 'react-router-dom'
 import TableCommon from 'compoents/table'
 import FromSearch from 'compoents/FromSearch'
 import ModalComm from './compoents/Modal'
@@ -32,6 +31,7 @@ const UserList = () => {
             {title: "姓名", dataIndex: "username", key: "username"},
             {title: "真实姓名", dataIndex: "truename", key: "truename"},
             {title: "手机", dataIndex: "phone", key: "phone"},
+            {title: "权限", dataIndex: "role_str", key: "role_str"},
             {
                 title: "禁启用", dataIndex: "status", key: "status",
                 render: (status, rowData) => {
@@ -45,10 +45,10 @@ const UserList = () => {
                 render: (text, rowData) => {
                     return (
                         <div className="inline-button">
-                            <Link to={{pathname: '/index/staff/add', state: {id: rowData.id}}}><Button
+                            <Button
                                 type="primary" onClick={() => {
                                 goPage(rowData.id)
-                            }}>编辑</Button></Link>
+                            }}>编辑</Button>
 
                             <Button className="ml10" onClick={e => {
                                 deleteList(rowData.id)
@@ -84,7 +84,7 @@ const UserList = () => {
     ]
     //跳转到编辑页面
     const goPage = (id) => {
-        console.log(id)
+        modal.current.openModal({status:true,id})
     }
     //删除
     const deleteList = id => {
@@ -92,7 +92,7 @@ const UserList = () => {
     }
     //打开弹出框
     const openModalComm = () => {
-        modal.current.openModal(true)
+        modal.current.openModal({status:true})
     }
     //刷新表格
     const getTabelList = () => {
