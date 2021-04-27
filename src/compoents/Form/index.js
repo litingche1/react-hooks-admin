@@ -1,14 +1,14 @@
-import {useEffect, useState, Fragment,useImperativeHandle} from 'react'
-import {Form, Input, Button, Select, Radio, InputNumber, DatePicker,Row,Col} from 'antd'
+import { useEffect, useState, Fragment, useImperativeHandle } from 'react'
+import { Form, Input, Button, Select, Radio, InputNumber, DatePicker, Row, Col } from 'antd'
 import 'moment/locale/zh-cn';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import GetRemoteSelect from 'compoents/Select/index'
 import UploadCom from "compoents/Upload/index"
 import RichText from 'compoents/richText/index'
 import 'styles/main.scss'
-const {Option} = Select
+const { Option } = Select
 const FromCommon = (props) => {
-    const {FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey} = props
+    const { FieldsValue, buttonloading, formItemLayout, initialValues, formItem, fromKey } = props
     const [form] = Form.useForm();
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -27,9 +27,9 @@ const FromCommon = (props) => {
         'SelectData': '请选择',
         "Date": '请选择',
         "Upload": '请上传',
-        "Editor":'请输入'
+        "Editor": '请输入'
     }
-    const resetFrom=()=>{
+    const resetFrom = () => {
         form.resetFields()
     }
     useImperativeHandle(props.cref, () => ({
@@ -61,10 +61,10 @@ const FromCommon = (props) => {
         let rules = []
         if (item.required) {
             let message = item.message || `${messageRules[item.type]}${item.label}`
-            rules.push({required: true, message})
+            rules.push({ required: true, message })
         }
         if (item.rules && item.rules.length > 0) {
-            rules=[...rules,...item.rules]
+            rules = [...rules, ...item.rules]
         }
         return rules
     }
@@ -73,8 +73,8 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         // console.log(rules)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input placeholder={item.Select}/>
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules} shouldUpdate={item.shouldUpdate || false}>
+                <Input type={item.inputType || 'text'} placeholder={item.Select} />
             </Form.Item>
         )
     }
@@ -83,7 +83,7 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <InputNumber min={item.min} max={item.max} value={1}/>
+                <InputNumber min={item.min} max={item.max} value={1} />
             </Form.Item>
         )
     }
@@ -92,7 +92,7 @@ const FromCommon = (props) => {
         const rules = itemRules(item)
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
-                <Input.TextArea placeholder={item.Select}/>
+                <Input.TextArea placeholder={item.Select} />
             </Form.Item>
         )
     }
@@ -121,8 +121,8 @@ const FromCommon = (props) => {
     const selectData = (item) => {
         const rules = itemRules(item)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, {validator: checkPrice}]}>
-                <GetRemoteSelect data={item} url={item.url && item.url} name={item.name}/>
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, { validator: checkPrice }]}>
+                <GetRemoteSelect data={item} url={item.url && item.url} name={item.name} />
             </Form.Item>
         )
     }
@@ -173,7 +173,7 @@ const FromCommon = (props) => {
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
 
-                <DatePicker locale={locale} format={item.format} picker={item.picker}/>
+                <DatePicker locale={locale} format={item.format} picker={item.picker} />
 
             </Form.Item>
         )
@@ -184,30 +184,30 @@ const FromCommon = (props) => {
         return (
             <Form.Item label={item.label} name={item.name} key={item.name} rules={rules}>
 
-                <UploadCom name={item.name} initValue={FieldsValue}/>
+                <UploadCom name={item.name} initValue={FieldsValue} />
 
             </Form.Item>
 
         )
     }
     //富文本
-    const editorElem=item=>{
+    const editorElem = item => {
         const rules = itemRules(item)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, {validator: checkPrice}]}>
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={[...rules, { validator: checkPrice }]}>
 
-                <RichText name={item.name} initValue={FieldsValue}/>
+                <RichText name={item.name} initValue={FieldsValue} />
 
             </Form.Item>
 
         )
     }
     //内联
-    const FormItemInlineElem=item=>{
+    const FormItemInlineElem = item => {
         const rules = itemRules(item)
         return (
             <Row gutter={24}>
-                <Col span={2} className="ant-form-item" style={{textAlign:"right"}}>
+                <Col span={2} className="ant-form-item" style={{ textAlign: "right" }}>
                     <div className="ant-form-item-label">
                         <label for="name" className="ant-form-item-required">{item.label}</label>
                     </div>
@@ -215,8 +215,8 @@ const FromCommon = (props) => {
                 <Col span={22}>
                     <Row>
                         {
-                            item.inline_item.map(elem=>{
-                                return(
+                            item.inline_item.map(elem => {
+                                return (
                                     <Col span={elem.col} className="form-item-inline-control">{createControl(elem)}</Col>
                                 )
                             })
@@ -227,8 +227,8 @@ const FromCommon = (props) => {
         )
 
     }
-//创建表单
-    const createControl=item=>{
+    //创建表单
+    const createControl = item => {
         switch (item.type) {
             case 'Input':
                 return inputElem(item)
@@ -276,7 +276,7 @@ const FromCommon = (props) => {
         if (!formItem || (formItem && formItem.length === 0)) {
             return false
         }
-        let fromList=formItem.map(item => createControl(item))
+        let fromList = formItem.map(item => createControl(item))
         return fromList
     }
     const { submitButton } = props
@@ -289,7 +289,7 @@ const FromCommon = (props) => {
                         <Row>
                             <Col span={formItemLayout.labelCol.span}></Col>
                             <Col span={formItemLayout.wrapperCol.span}>
-                                {submitButton?<Button type="primary" htmlType="submit" loading={loading}>确定</Button> : ''}
+                                {submitButton ? <Button type="primary" htmlType="submit" loading={loading}>确定</Button> : ''}
                             </Col>
                         </Row>
 
@@ -303,6 +303,6 @@ const FromCommon = (props) => {
     )
 }
 FromCommon.defaultProps = {
-    submitButton:true,
+    submitButton: true,
 }
 export default FromCommon

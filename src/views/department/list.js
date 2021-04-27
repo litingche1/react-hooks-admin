@@ -1,6 +1,6 @@
 import { useState, Fragment, useRef } from 'react'
 import { Button, Switch, message } from 'antd';
-import { DepartmentStatus } from 'api/department'
+import { DepartmentStatus } from '../../api/department'
 import { Link } from 'react-router-dom'
 import TableCommon from 'compoents/table'
 import store from 'stroe'
