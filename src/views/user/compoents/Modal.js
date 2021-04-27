@@ -1,18 +1,19 @@
-import {useEffect, useState,useImperativeHandle} from 'react'
-import {Modal} from 'antd';
+import {useEffect, useState, useImperativeHandle} from 'react'
+import {Modal, message} from 'antd';
 import FromCommon from 'compoents/Form'
-import {validate_phone} from "utils/validate";
+import {validate_phone, validate_password} from "utils/validate";
+import {userAdd} from 'api/user'
+import CryptoJs from 'crypto-js';
+
 const ModalComm = props => {
+    const {refreshTable} = props
     const [isModalVisible, setisModalVisible] = useState(false)
     const [buttonloading, setbuttonloading] = useState(false)
     const [FieldsValue, setFieldsValue] = useState({})
-    const handleOk = () => {
-        setisModalVisible(false)
-    }
     const handleCancel = () => {
         setisModalVisible(false)
     }
-    const open=(value)=>{
+    const open = (value) => {
         setisModalVisible(value)
     }
     //父组件调用删除
@@ -23,9 +24,14 @@ const ModalComm = props => {
     }))
     //表单提交
     const onFinish = async value => {
-        console.log(value)
-        // setbuttonloading(true)
-        // itemId ? modify(value) : addItem(value)
+        const data = value
+        data.passwor = CryptoJs.MD5(data.password).toString()
+        delete data.confirmPassword
+        const res = await userAdd(data)
+        message.success(res.data.message)
+        setbuttonloading(true)
+        setisModalVisible(false)
+        refreshTable()
     }
     const formItemLayout = {
         labelCol: {span: 5},
@@ -38,31 +44,70 @@ const ModalComm = props => {
             type: 'Input',
             label: '用户名',
             required: true,
-            name: 'name',
+            name: 'username',
             Select: "请输入姓名"
         },
         {
             type: 'Input',
             label: '密码',
             required: true,
-            name: 'card_id',
-            Select: "请输入身份证号码",
-            rules: [],
+            name: 'password',
+            Select: "请输入密码",
+            rules: [
+                ({getFieldValue}) => ({
+                    validator(_, value) {
+                        let confirmPasswords = getFieldValue('confirmPassword')
+                        if (value) {
+                            if (confirmPasswords && confirmPasswords !== value) {
+                                return Promise.reject('二次输入密码不一致');
+                            }
+
+                            if (validate_password(value)) {
+                                return Promise.resolve();
+                            } else {
+                                return Promise.reject('请输入6到20位字母+数字的密码!');
+                            }
+
+
+                        } else {
+                            return Promise.reject('密码不能为空!');
+                        }
+
+
+                    },
+                }),
+            ],
         },
         {
             type: 'Input',
             label: '确认密码',
             required: true,
-            name: 'card_id',
-            Select: "请输入身份证号码",
-            rules: [],
+            name: 'confirmPassword',
+            Select: "请输入确认密码",
+            rules: [
+                ({getFieldValue}) => ({
+                    validator(_, value) {
+                        let confirmPasswords = getFieldValue('password')
+                        if (value) {
+                            if (confirmPasswords && confirmPasswords !== value) {
+                                return Promise.reject('二次输入密码不一致');
+                            }
+                            return Promise.resolve('');
+                        } else {
+                            return Promise.reject('再次输入密码不能为空!');
+                        }
+
+
+                    },
+                }),
+            ],
         },
         {
             type: 'Input',
             label: '真实姓名',
             required: true,
-            name: 'card_id',
-            Select: "请输入身份证号码",
+            name: 'truename',
+            Select: "请输入真实姓名",
             rules: [],
         },
         {
@@ -85,27 +130,24 @@ const ModalComm = props => {
         },
         {
             type: 'Radio',
-            label: '性别',
+            label: '禁启用状态',
             name: 'sex',
             required: true,
             rules: [],
             options: [
-                {value: true, label: '男'},
-                {value: false, label: '女'}
+                {value: true, label: '启用'},
+                {value: false, label: '禁用'}
             ]
         },
-
-
-
 
 
     ]
     //表单的初始化值
     const initialValues = {
-        radio: false, textArea: '', number: 0, name: ''
+        // radio: false, textArea: '', number: 0, name: ''
     }
     return (
-        <Modal title="用户新增/修改" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="用户新增/修改" visible={isModalVisible} onCancel={handleCancel} footer={null}>
             <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout}
                         initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish}
                         buttonloading={buttonloading}>

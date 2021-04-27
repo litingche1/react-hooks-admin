@@ -67,8 +67,13 @@ let TableCommon = (props) => {
     useImperativeHandle(props.cref, () => ({
         deleteItem: (id) => {
             deleteList(id)
+        },
+        getList:()=>{  //父组件调用子组件刷新
+            getData()
         }
     }))
+
+
     //删除
     const deleteList = id => {
         if (id) {
@@ -90,6 +95,7 @@ let TableCommon = (props) => {
             }
 
         }
+        console.log(resData.url)
         let res = await DeleteList(resData)
         if (res.data.resCode === 0) {
             message.success(res.data.message)

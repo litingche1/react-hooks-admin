@@ -5,7 +5,6 @@ export function validate_email(value) {
     return emailCheckRule.test(value)
 }
 export function validate_phone(value){
-    console.log(9)
     return phoneCheckRule.test(value)
 }
 export function validate_password(value) {

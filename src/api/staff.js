@@ -1,6 +1,6 @@
 import serves from '../utils/request'
 /*
- * 职位列表
+ * 职员添加
  */
 export function staffAdd(data) {
     return serves.request({

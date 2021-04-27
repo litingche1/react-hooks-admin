@@ -278,7 +278,13 @@ const FromCommon = (props) => {
                 {initFromItem()}
                 <Form.Item>
                     {
-                        submitButton?<Button type="primary" htmlType="submit" loading={loading}>确定</Button> : ''
+                        <Row>
+                            <Col span={formItemLayout.labelCol.span}></Col>
+                            <Col span={formItemLayout.wrapperCol.span}>
+                                {submitButton?<Button type="primary" htmlType="submit" loading={loading}>确定</Button> : ''}
+                            </Col>
+                        </Row>
+
                     }
 
                 </Form.Item>
