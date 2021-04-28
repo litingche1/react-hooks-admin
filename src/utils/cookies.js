@@ -17,3 +17,11 @@ export function setUsername(value) {
 export function getUsername(value) {
     return cookies.load(username)
 }
+//删除token
+export function removeToken(){
+    return cookies.remove(token,{path:'/'})
+}
+//删除用户名
+export function removeUsername(){
+    return cookies.remove(username,{path:'/'})
+}

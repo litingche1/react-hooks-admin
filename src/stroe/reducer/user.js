@@ -1,4 +1,4 @@
-import { setUserNameValue, setTokenValue } from '../type'
+import { setUserNameValue, setTokenValue,Logout } from '../type'
 import { getToken, getUsername } from '../../utils/cookies'
 const userData = {
     username: '' || getToken(),
@@ -16,6 +16,13 @@ const userDataReducer = (state = userData, action) => {
             return {
                 ...state,
                 token: action.data
+            }
+        }
+        case Logout:{
+            return{
+                ...state,
+                token: action.data,
+                username: action.data
             }
         }
         default:

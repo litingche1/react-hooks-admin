@@ -105,7 +105,7 @@ const UserList = () => {
                     openModalComm()
                 }}>添加用户</Button>
             </FromSearch>
-            <TableCommon rowKey={record => record.id} cref={table} batchButton={true} config={tableConfig}>
+            <TableCommon rowKey={record => record.id} cref={table} batchButton={true} config={tableConfig} dataList={true}>
             </TableCommon>
             <ModalComm cref={modal} refreshTable={getTabelList}></ModalComm>
         </Fragment>

@@ -10,7 +10,7 @@ export function userAdd(data) {
     })
 }
 /*
- * 用户添加
+ * 用户禁启用
  */
 export function userstatus(data) {
     return serves.request({
@@ -25,6 +25,16 @@ export function userstatus(data) {
 export function userDetailed(data) {
     return serves.request({
         url: '/user/detailed/',
+        method: 'post',
+        data
+    })
+}
+/*
+ * 用户编辑
+ */
+export function userEdit(data) {
+    return serves.request({
+        url: '/user/edit/',
         method: 'post',
         data
     })

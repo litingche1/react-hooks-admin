@@ -16,6 +16,7 @@ let TableCommon = (props) => {
     const [isModalVisible, setisModalVisible] = useState(false)
     const [itemId, setitemId] = useState()
     const [SelectList, setSelectList] = useState([])
+    const[tabelDataList,settabelDataList]=useState()
     useEffect(() => {
         if (prepageSize !== pageSize) {
             setpageNumber(1)
@@ -29,7 +30,7 @@ let TableCommon = (props) => {
     }, [pageNumber])
     const { columns, url, method, checkbox } = props.config
     const { total } = props.list.departmentList
-    const { rowKey } = props
+    const { rowKey,dataList } = props
     //获取表格数据
     const getData = async () => {
         settableLoading(true)
@@ -41,7 +42,11 @@ let TableCommon = (props) => {
         }
         let res = await getList(params)
         if (res.data.resCode === 0) {
+            // console.log(res.data.data)
             props.actions.addDate(res.data.data)
+            dataList&&settabelDataList(res.data.data.data)
+            // console.log(dataList)
+            // console.log(tabelDataList)
             settableLoading(false)
             prepageSizeset(pageSize)
         }
@@ -102,10 +107,10 @@ let TableCommon = (props) => {
             setSelectList([])
             getData()
         }
-    }
+    }//props.list.departmentList.data
     return (
         <Fragment>
-            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={props.list.departmentList.data} bordered></Table>
+            <Table pagination={false} rowKey={rowKey ? rowKey : "id"} rowSelection={checkbox ? rowSelection : null} loading={tableLoading} columns={columns} dataSource={dataList?tabelDataList : props.list.departmentList.data} bordered></Table>
             <Row className="mt10">
                 <Col span={8}>
                     {

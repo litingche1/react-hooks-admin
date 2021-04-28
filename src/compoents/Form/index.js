@@ -13,8 +13,10 @@ const FromCommon = (props) => {
     const [loading, setloading] = useState(false)
     useEffect(() => {
         form.setFieldsValue(FieldsValue)
+        console.log(FieldsValue)
     }, [FieldsValue, form])
     useEffect(() => {
+        console.log(buttonloading)
         setloading(false)
         resetFrom()
     }, [buttonloading])
@@ -68,13 +70,17 @@ const FromCommon = (props) => {
         }
         return rules
     }
+    const BlurEvent=(e)=>{
+        props.onBlur(e.currentTarget)
+         console.log(e)
+    }
     //input
     const inputElem = (item) => {
         const rules = itemRules(item)
         // console.log(rules)
         return (
-            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules} shouldUpdate={item.shouldUpdate || false}>
-                <Input type={item.inputType || 'text'} placeholder={item.Select} />
+            <Form.Item label={item.label} name={item.name} key={item.name} rules={rules} shouldUpdate={item.shouldUpdate || false} validateTrigger={item.validateTrigger || 'onChange'}>
+                <Input type={item.inputType || 'text'} placeholder={item.Select} onBlur={item.blurEvent&&BlurEvent}/>
             </Form.Item>
         )
     }
