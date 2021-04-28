@@ -1,9 +1,10 @@
 import { useState, useImperativeHandle, useRef } from "react";
-import { Modal, message } from "antd";
+import { Modal, message, Checkbox } from "antd";
 import FromCommon from "compoents/Form";
 import { validate_phone, validate_password } from "utils/validate";
 import { userAdd, userDetailed, userEdit } from "api/user";
 import CryptoJs from "crypto-js";
+import { getRole } from 'api/permissions'
 let formItem = [
     {
         type: "Input",
@@ -71,6 +72,15 @@ let formItem = [
             { value: true, label: "启用" },
             { value: false, label: "禁用" }
         ]
+    },
+    {
+        type: "Solt",
+        label: "权限",
+        name: "role",
+        soltName: '',
+        rules: [
+            { message: '请选择权限', required: true }
+        ]
     }
 ];
 const ModalComm = props => {
@@ -80,6 +90,7 @@ const ModalComm = props => {
     const [FieldsValue, setFieldsValue] = useState({});
     const [formData, setformData] = useState(formItem);
     const [userId, setuserId] = useState()
+    const [optionsWithDisabled, setoptionsWithDisabled] = useState([])
     const From = useRef();
 
     const handleCancel = () => {
@@ -137,13 +148,25 @@ const ModalComm = props => {
         let res = await userDetailed({ id });
         setFieldsValue(res.data.data);
     };
+    //获取权限
+    const getRoleData = async () => {
+        let res = await getRole()
+        setoptionsWithDisabled(res.data.data)
+        console.log(res)
+    }
+    //选中d的权限
+    const onChange = (value) => {
+        console.log(value)
+    }
     //父组件调用
     useImperativeHandle(props.cref, () => ({
         openModal: data => {
             open(data.status);
             getUserDetailed(data);
+            getRoleData()
             const { id } = data
             id && setuserId(id)
+
         }
     }));
     //表单提交(添加)
@@ -162,7 +185,7 @@ const ModalComm = props => {
         const data = value;
         data.passwor = CryptoJs.MD5(data.password).toString();
         delete data.confirmPassword;
-        data.id=userId
+        data.id = userId
         const res = await userEdit(data);
         console.log(res)
         message.success(res.data.message);
@@ -185,18 +208,18 @@ const ModalComm = props => {
     //
     const FormBlur = data => {
         console.log(data.id)
-        const { value,id } = data;
+        const { value, id } = data;
         if (value) {
-            if(id==='password'){
-                    setFrom([1], {
-                1: {
-                    required: !value ? false : true,
-                    rules: value ? [passwordValidate] : ""
-                }
-    
-            });
+            if (id === 'password') {
+                setFrom([1], {
+                    1: {
+                        required: !value ? false : true,
+                        rules: value ? [passwordValidate] : ""
+                    }
+
+                });
             }
-            if(id==='confirmPassword'){
+            if (id === 'confirmPassword') {
                 setFrom([2], {
                     2: {
                         required: !value ? false : true,
@@ -204,7 +227,7 @@ const ModalComm = props => {
                     }
                 });
             }
-        
+
         }
         console.log(data.value);
     };
@@ -229,7 +252,13 @@ const ModalComm = props => {
                 buttonloading={buttonloading}
                 cref={From}
                 onBlur={FormBlur}
-            ></FromCommon>
+            >
+
+                <Checkbox.Group
+                    options={optionsWithDisabled}
+                    onChange={onChange}
+                />
+            </FromCommon>
         </Modal>
     );
 };
