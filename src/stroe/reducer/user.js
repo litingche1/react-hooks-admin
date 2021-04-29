@@ -1,9 +1,9 @@
-import { setUserNameValue, setTokenValue,Logout,Login } from '../type'
+import { setUserNameValue, setTokenValue, Logout, LoginType } from '../type'
 import { getToken, getUsername } from '../../utils/cookies'
 const userData = {
     username: '' || getToken(),
     token: '' || getUsername(),
-    router:''
+    router: []
 }
 const userDataReducer = (state = userData, action) => {
     switch (action.type) {
@@ -19,15 +19,15 @@ const userDataReducer = (state = userData, action) => {
                 token: action.data
             }
         }
-        case Logout:{
-            return{
+        case Logout: {
+            return {
                 ...state,
                 token: action.data,
                 username: action.data
             }
         }
-        case Login:{
-            return{
+        case LoginType: {
+            return {
                 ...state,
                 router: action.data,
             }

@@ -2,13 +2,13 @@ import { Fragment, useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
-import { Login } from '../../api/account'
+// import { Login } from '../../api/account'
 import Code from '../../compoents/code'
 import CryptoJs from 'crypto-js';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setTokenData, setUserNameData,accountLogin } from 'stroe/action/user'
+import { setTokenData, setUserNameData, accountLogin } from 'stroe/action/user'
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
@@ -19,23 +19,18 @@ const LoginFrom = (props) => {
             setloading(false)
         }
     }, [])
-    console.log(props.actions)
-    const onFinish =  (value) => {
-        props.actions.accountLogin(value)
-        // setloading(true)
-        // let params = {
-        //     username: value.username,
-        //     password: CryptoJs.MD5(value.password).toString(),
-        //     code: value.code
-        // }
-        // let res = await Login(params)
-        // if (res.data.resCode === 0) {
-        //     props.actions.setTokenData(res.data.data.token)
-        //     props.actions.setUserNameData(res.data.data.username)
-        //         sessionStorage.setItem('role',res.data.data.role)
-        //     history.push('/index')
-        // }
-        // setloading(false)
+    const onFinish = (value) => {
+
+        setloading(true)
+        let params = {
+            username: value.username,
+            password: CryptoJs.MD5(value.password).toString(),
+            code: value.code
+        }
+        props.actions.accountLogin(params).then(res => {
+            history.push('/index')
+        })
+        setloading(false)
     }
     const module = 'register'
     const goRegister = () => {
@@ -132,5 +127,3 @@ export default connect(
     null,
     mapDispatchToProps
 )(withRouter(LoginFrom))
-
-// export default withRouter(LoginFrom)
