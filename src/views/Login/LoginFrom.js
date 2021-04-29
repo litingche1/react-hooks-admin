@@ -8,7 +8,7 @@ import CryptoJs from 'crypto-js';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setTokenData, setUserNameData } from 'stroe/action/user'
+import { setTokenData, setUserNameData,accountLogin } from 'stroe/action/user'
 const LoginFrom = (props) => {
     const [username, setusername] = useState('')
     const [loading, setloading] = useState(false)
@@ -20,21 +20,22 @@ const LoginFrom = (props) => {
         }
     }, [])
     console.log(props.actions)
-    const onFinish = async (value) => {
-        setloading(true)
-        let params = {
-            username: value.username,
-            password: CryptoJs.MD5(value.password).toString(),
-            code: value.code
-        }
-        let res = await Login(params)
-        if (res.data.resCode === 0) {
-            props.actions.setTokenData(res.data.data.token)
-            props.actions.setUserNameData(res.data.data.username)
-
-            history.push('/index')
-        }
-        setloading(false)
+    const onFinish =  (value) => {
+        props.actions.accountLogin(value)
+        // setloading(true)
+        // let params = {
+        //     username: value.username,
+        //     password: CryptoJs.MD5(value.password).toString(),
+        //     code: value.code
+        // }
+        // let res = await Login(params)
+        // if (res.data.resCode === 0) {
+        //     props.actions.setTokenData(res.data.data.token)
+        //     props.actions.setUserNameData(res.data.data.username)
+        //         sessionStorage.setItem('role',res.data.data.role)
+        //     history.push('/index')
+        // }
+        // setloading(false)
     }
     const module = 'register'
     const goRegister = () => {
@@ -123,6 +124,7 @@ const mapDispatchToProps = (dispatch) => {
         actions: bindActionCreators({//多个action的处理
             setTokenData,
             setUserNameData,
+            accountLogin
         }, dispatch)
     }
 }

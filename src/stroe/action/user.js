@@ -1,4 +1,4 @@
-import { setUserNameValue, setTokenValue } from '../type'
+import { setUserNameValue, setTokenValue,Login } from '../type'
 import { setToken, setUsername } from '../../utils/cookies'
 export const setTokenData = (data) => {
     setToken(data)
@@ -13,4 +13,15 @@ export const setUserNameData = (data) => {
         type: setUserNameValue,
         data
     }
+}
+
+export const updata=(data)=>{
+    return {
+        type:Login,
+        data
+    }
+}
+export const accountLogin=(data)=>dispatch=>{
+    console.log(data)
+    dispatch(updata(1111))
 }

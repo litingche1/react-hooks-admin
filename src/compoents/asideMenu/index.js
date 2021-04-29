@@ -8,12 +8,49 @@ const AsideMenu = props => {
     let location = useLocation();
     const [selectedKeys, setselectedKeys] = useState(['/index/user/list'])
     const [openKey, setopenKey] = useState(['/index/user'])
-
+    const [RouterList, setRouterList] = useState([Router])
     useEffect(() => {
         setselectedKeys([location.pathname])
         const menuKey = location.pathname.split('/').slice(0, 3).join('/')
         setopenKey([menuKey])
     }, [location])
+    useEffect(() => {
+        //获取用户权限列表
+        const roleList = sessionStorage.getItem('role').split(',')
+        let router = []
+        console.log(roleList)
+        console.log(roleList.indexOf('admin')>= 0)
+        //判断是否是超级管理员
+        if (roleList.indexOf('admin') >= 0) {
+            router = Router
+            console.log('admin',router)
+        } else {
+            //遍历菜单路由，过滤登录的用户拥有的菜单 
+            router = Router.filter(item => {
+                if (hasPermission(roleList, item)) {
+                    if (item.child && item.child.length > 0) {
+                        item.child = item.child.filter(elem => {
+                            if (hasPermission(roleList, elem)) {
+                                return elem
+                            }
+                        })
+                        return item
+                    }
+                    return item
+                }
+            })
+             console.log('其他',router)
+
+        }
+
+        setRouterList(router)
+       
+    }, [])
+    const hasPermission = (roleList, router) => {
+        if (router.role && router.role.length > 0) {
+            return roleList.some(elm => router.role.indexOf(elm) >= 0)
+        }
+    }
     const MenuList = ({ key, title }) => {
         return (<Menu.Item key={key}>
             <Link to={key}>{title}</Link>
@@ -53,7 +90,7 @@ const AsideMenu = props => {
                 style={{ height: '100%', borderRight: 0 }}
             >
                 {
-                    Router && Router.map(item => {
+                    RouterList && RouterList.map(item => {
                         return item.child && item.child.length > 0 ? SubMenuList(item) : MenuList(item)
                     })
 

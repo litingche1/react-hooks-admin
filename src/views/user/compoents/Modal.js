@@ -91,6 +91,7 @@ const ModalComm = props => {
     const [formData, setformData] = useState(formItem);
     const [userId, setuserId] = useState()
     const [optionsWithDisabled, setoptionsWithDisabled] = useState([])
+    const [selectedRole, setselectedRole] = useState()
     const From = useRef();
 
     const handleCancel = () => {
@@ -146,7 +147,10 @@ const ModalComm = props => {
         });
         if (!id) return;
         let res = await userDetailed({ id });
-        setFieldsValue(res.data.data);
+        let dataItem=res.data.data
+        dataItem.role=dataItem.role.split(',')
+        console.log(dataItem.role)
+        setFieldsValue(dataItem);
     };
     //获取权限
     const getRoleData = async () => {
@@ -156,6 +160,7 @@ const ModalComm = props => {
     }
     //选中d的权限
     const onChange = (value) => {
+        setselectedRole(value)
         console.log(value)
     }
     //父组件调用
@@ -172,7 +177,10 @@ const ModalComm = props => {
     //表单提交(添加)
     const onFinish = async value => {
         const data = value;
-        data.passwor = CryptoJs.MD5(data.password).toString();
+        data.password = CryptoJs.MD5(data.password).toString();
+        data.role = selectedRole.join(',')
+        console.log(data)
+        // return false
         delete data.confirmPassword;
         const res = await userAdd(data);
         message.success(res.data.message);
@@ -183,7 +191,9 @@ const ModalComm = props => {
     //表单提交(编辑)
     const onFinishEdit = async value => {
         const data = value;
-        data.passwor = CryptoJs.MD5(data.password).toString();
+        data.password = CryptoJs.MD5(data.password).toString();
+        console.log(data)
+        data.role = selectedRole.join(',')
         delete data.confirmPassword;
         data.id = userId
         const res = await userEdit(data);
@@ -191,7 +201,7 @@ const ModalComm = props => {
         message.success(res.data.message);
         setbuttonloading(true);
         setisModalVisible(false);
-        // refreshTable();
+        refreshTable();
     };
     const formItemLayout = {
         labelCol: { span: 5 },

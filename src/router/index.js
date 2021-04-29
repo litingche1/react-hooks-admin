@@ -8,8 +8,9 @@ const router = [
         title: '用户管理',
         icon: 'laptop',
         key: '/index/user',
+        role:['user'],
         child: [
-            { key: '/index/user/list', title: '用户列表', icon: '', },
+            { key: '/index/user/list', title: '用户列表', icon: '', role:['user'],},
             {
                 key: '/index/user/add',
                 title: '添加用户',
@@ -21,9 +22,10 @@ const router = [
         title: '部门管理',
         icon: 'bars',
         key: '/index/department',
+        role:['user'],
         child: [
-            { key: '/index/department/list', title: '部门列表', icon: '' },
-            { key: '/index/department/add', title: '添加部门', icon: '' },
+            { key: '/index/department/list', title: '部门列表', icon: '' ,role:['user'],},
+            { key: '/index/department/add', title: '添加部门', icon: '',role:['user'], },
         ]
     },
     {
