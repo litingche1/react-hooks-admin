@@ -2,7 +2,6 @@ import { Fragment, useState, useEffect } from 'react'
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { passwordCheckRule, validate_email } from '../../utils/validate'
-// import { Login } from '../../api/account'
 import Code from '../../compoents/code'
 import CryptoJs from 'crypto-js';
 import { withRouter, useHistory } from 'react-router-dom';

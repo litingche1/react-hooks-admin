@@ -2,7 +2,9 @@ import { Fragment, useState, useEffect } from "react"
 import { Menu } from "antd"
 import { UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Link, withRouter, useLocation } from 'react-router-dom'
+import { getRoleList } from 'stroe/action/user'
 const { SubMenu } = Menu
 const AsideMenu = props => {
     let location = useLocation();
@@ -13,6 +15,9 @@ const AsideMenu = props => {
         const menuKey = location.pathname.split('/').slice(0, 3).join('/')
         setopenKey([menuKey])
     }, [location])
+    useEffect(()=>{
+      props.actions.getRoleList()
+    },[])
     const MenuList = ({ key, title }) => {
         return (<Menu.Item key={key}>
             <Link to={key}>{title}</Link>
@@ -68,7 +73,14 @@ const mapStateToProps = (state) => {
         RouterList: state.userData.router
     }
 }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators({//多个action的处理
+            getRoleList
+        }, dispatch)
+    }
+}
 export default connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
 )(withRouter(AsideMenu))

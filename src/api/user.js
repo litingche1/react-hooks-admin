@@ -39,3 +39,13 @@ export function userEdit(data) {
         data
     })
 }
+/*
+ * 用户角色
+ */
+export function getRole(data={}) {
+    return serves.request({
+        url: '/user/role/',
+        method: 'post',
+        data
+    })
+}

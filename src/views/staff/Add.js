@@ -1,4 +1,4 @@
-import {message, Row, Col, Radio, DatePicker} from 'antd'
+import {message} from 'antd'
 import {staffAdd, staffDetailed, staffEdit} from 'api/staff'
 import {useState, useEffect} from 'react'
 import {useLocation} from 'react-router-dom'
@@ -312,9 +312,6 @@ const StaffAdd = () => {
     //表单的初始化值
     const initialValues = {
         radio: false, textArea: '', number: 0, name: ''
-    }
-    const onChange = (e) => {
-        // setjobStatusValue(e.target.value)
     }
     return (
         <div>

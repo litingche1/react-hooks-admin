@@ -1,6 +1,7 @@
 import { setUserNameValue, setTokenValue, LoginType } from '../type'
 import { setToken, setUsername } from '../../utils/cookies'
 import { Login } from '../../api/account'
+import {getRole} from 'api/user'
 import Router from '../../router'
 export const setTokenData = (data) => {
     setToken(data)
@@ -29,8 +30,21 @@ export const hasPermission = (roleList, router) => {
         return roleList.some(elm => router.role.indexOf(elm) >= 0)
     }
 }
+//登录逻辑
 export const accountLogin = (data) => dispatch => {
     return Login(data).then(res => {
+        if (res.data.resCode === 0) {
+            dispatch(setUserNameData(res.data.data.username))
+            dispatch(setTokenData(res.data.data.token))
+        }
+    }).catch(err => {
+        console.log(err)
+    })
+
+}
+//获取用户角色
+export const getRoleList=()=>dispatch=>{
+    return getRole().then(res => {
         if (res.data.resCode === 0) {
             //获取用户权限列表
             const roleList = res.data.data.role.split(',')
@@ -57,12 +71,8 @@ export const accountLogin = (data) => dispatch => {
 
             }
             dispatch(setRole(router))
-            dispatch(setUserNameData(res.data.data.username))
-            dispatch(setTokenData(res.data.data.token))
         }
     }).catch(err => {
         console.log(err)
     })
-
-
 }
