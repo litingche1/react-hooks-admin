@@ -1,6 +1,7 @@
 import { useState, useImperativeHandle, useRef } from "react";
 import { Modal, message, Checkbox } from "antd";
 import FromCommon from "compoents/Form";
+import CheckboxCom from 'compoents/Checkbox'
 import { validate_phone, validate_password } from "utils/validate";
 import { userAdd, userDetailed, userEdit } from "api/user";
 import CryptoJs from "crypto-js";
@@ -77,9 +78,18 @@ let formItem = [
         type: "Solt",
         label: "权限",
         name: "role",
-        soltName: '',
+        soltName: 'authority',
         rules: [
             { message: '请选择权限', required: true }
+        ]
+    },
+    {
+        type: "Solt",
+        label: "菜单权限",
+        name: "menuRole",
+        soltName: 'menuAuthority',
+        rules: [
+            { message: '请选择菜单权限', required: true }
         ]
     }
 ];
@@ -101,6 +111,36 @@ const ModalComm = props => {
     const open = value => {
         setisModalVisible(value);
     };
+    const menuRoleList = [
+        {
+            label: '用户管理',
+            value: '/user/',
+            child_item: [
+                {
+                    label: '用户列表',
+                    value: '/user/list/',
+                },
+                {
+                    label: '添加用户',
+                    value: '/user/add/',
+                }
+            ]
+        },
+        {
+            label: '部门管理',
+            value: '/department/',
+            child_item: [
+                {
+                    label: '用户部门列表列表',
+                    value: '/department/list/',
+                },
+                {
+                    label: '添加部门',
+                    value: '/department/add/',
+                }
+            ]
+        }
+    ]
     const passwordValidate = ({ getFieldValue }) => ({
         validator(_, value) {
             let confirmPasswords = getFieldValue("confirmPassword");
@@ -147,16 +187,16 @@ const ModalComm = props => {
         });
         if (!id) return;
         let res = await userDetailed({ id });
-        let dataItem=res.data.data
-        dataItem.role=dataItem.role.split(',')
-        console.log(dataItem.role)
+        let dataItem = res.data.data
+        dataItem.role = dataItem.role.split(',')
+        // console.log(dataItem.role)
         setFieldsValue(dataItem);
     };
-    //获取权限
+    //获取权限列表
     const getRoleData = async () => {
         let res = await getRole()
         setoptionsWithDisabled(res.data.data)
-        console.log(res)
+        // console.log(res)
     }
     //选中d的权限
     const onChange = (value) => {
@@ -179,7 +219,6 @@ const ModalComm = props => {
         const data = value;
         data.password = CryptoJs.MD5(data.password).toString();
         data.role = selectedRole.join(',')
-        console.log(data)
         // return false
         delete data.confirmPassword;
         const res = await userAdd(data);
@@ -192,12 +231,10 @@ const ModalComm = props => {
     const onFinishEdit = async value => {
         const data = value;
         data.password = CryptoJs.MD5(data.password).toString();
-        console.log(data)
         data.role = selectedRole.join(',')
         delete data.confirmPassword;
         data.id = userId
         const res = await userEdit(data);
-        console.log(res)
         message.success(res.data.message);
         setbuttonloading(true);
         setisModalVisible(false);
@@ -263,11 +300,20 @@ const ModalComm = props => {
                 cref={From}
                 onBlur={FormBlur}
             >
-
-                <Checkbox.Group
-                    options={optionsWithDisabled}
-                    onChange={onChange}
-                />
+                <div ref="authority">
+                    <Checkbox.Group
+                        options={optionsWithDisabled}
+                        onChange={onChange}
+                    />
+                </div>
+                <div ref="menuAuthority">
+                    {
+                        menuRoleList.map(item=>{
+                          return <CheckboxCom data={item} key={item.value}></CheckboxCom>
+                        })
+                    }
+                   
+              </div>
             </FromCommon>
         </Modal>
     );

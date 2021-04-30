@@ -13,7 +13,7 @@ const router = [
             { key: '/index/user/list', title: '用户列表', icon: '', role:['user'],},
             {
                 key: '/index/user/add',
-                title: '添加用户',
+                title: '用户列表',
                 icon: ''
             }
         ]

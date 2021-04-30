@@ -313,7 +313,7 @@ const StaffAdd = () => {
     const initialValues = {
         radio: false, textArea: '', number: 0, name: ''
     }
-    return (
+    return ( 
         <div>
             <FromCommon fromKey={fromKey} formItem={formItem} formItemLayout={formItemLayout}
                         initialValues={initialValues} FieldsValue={FieldsValue} onFinish={onFinish}

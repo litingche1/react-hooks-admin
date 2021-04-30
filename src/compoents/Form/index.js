@@ -13,10 +13,8 @@ const FromCommon = (props) => {
     const [loading, setloading] = useState(false)
     useEffect(() => {
         form.setFieldsValue(FieldsValue)
-        console.log(FieldsValue)
     }, [FieldsValue, form])
     useEffect(() => {
-        console.log(buttonloading)
         setloading(false)
         resetFrom()
     }, [buttonloading])
