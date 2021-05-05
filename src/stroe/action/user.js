@@ -1,7 +1,7 @@
-import { setUserNameValue, setTokenValue, LoginType } from '../type'
+import { setUserNameValue, setTokenValue, LoginType, setMemu } from '../type'
 import { setToken, setUsername } from '../../utils/cookies'
 import { Login } from '../../api/account'
-import {getRole} from 'api/user'
+import { getRole } from 'api/user'
 import Router from '../../router'
 export const setTokenData = (data) => {
     setToken(data)
@@ -14,6 +14,13 @@ export const setUserNameData = (data) => {
     setUsername(data)
     return {
         type: setUserNameValue,
+        data
+    }
+}
+//设置选中的菜单权限(根据管理员选中的权限)
+export const setMemuPermissions = (data) => {
+    return {
+        type: setMemu,
         data
     }
 }
@@ -43,7 +50,7 @@ export const accountLogin = (data) => dispatch => {
 
 }
 //获取用户角色
-export const getRoleList=()=>dispatch=>{
+export const getRoleList = () => dispatch => {
     return getRole().then(res => {
         if (res.data.resCode === 0) {
             //获取用户权限列表

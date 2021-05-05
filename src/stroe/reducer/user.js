@@ -1,9 +1,10 @@
-import { setUserNameValue, setTokenValue, Logout, LoginType } from '../type'
+import { setUserNameValue, setTokenValue, Logout, LoginType, setMemu } from '../type'
 import { getToken, getUsername } from '../../utils/cookies'
 const userData = {
     username: '' || getToken(),
     token: '' || getUsername(),
-    router: []
+    router: [],
+    selectedPermissions: {}
 }
 const userDataReducer = (state = userData, action) => {
     switch (action.type) {
@@ -30,6 +31,12 @@ const userDataReducer = (state = userData, action) => {
             return {
                 ...state,
                 router: action.data,
+            }
+        }
+        case setMemu: {
+            return {
+                ...state,
+                selectedPermissions: action.data,
             }
         }
         default:
