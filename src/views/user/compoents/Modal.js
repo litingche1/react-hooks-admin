@@ -1,7 +1,9 @@
-import { useState, useImperativeHandle, useRef } from "react";
+import { useState, useImperativeHandle, useRef, useEffect } from "react";
 import { Modal, message, Checkbox } from "antd";
 import FromCommon from "compoents/Form";
 import CheckboxCom from 'compoents/Checkbox'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { validate_phone, validate_password } from "utils/validate";
 import { userAdd, userDetailed, userEdit } from "api/user";
 import CryptoJs from "crypto-js";
@@ -89,7 +91,7 @@ let formItem = [
         name: "menuRole",
         soltName: 'menuAuthority',
         rules: [
-            { message: '请选择菜单权限', required: true }
+            { message: '请选择菜单权限', required: false }
         ]
     }
 ];
@@ -102,19 +104,12 @@ const ModalComm = props => {
     const [userId, setuserId] = useState()
     const [optionsWithDisabled, setoptionsWithDisabled] = useState([])
     const [selectedRole, setselectedRole] = useState()
-    const From = useRef();
-
-    const handleCancel = () => {
-        setisModalVisible(false);
-        From.current.Rreset();
-    };
-    const open = value => {
-        setisModalVisible(value);
-    };
-    const menuRoleList = [
+    const [roleMenu, setroleMenu] = useState([])
+    const [menuRoleList, setmenuRoleList] = useState([
         {
             label: '用户管理',
             value: '/user/',
+            defaultValue:[],
             child_item: [
                 {
                     label: '用户列表',
@@ -129,9 +124,10 @@ const ModalComm = props => {
         {
             label: '部门管理',
             value: '/department/',
+            defaultValue:[],
             child_item: [
                 {
-                    label: '用户部门列表列表',
+                    label: '部门列表',
                     value: '/department/list/',
                 },
                 {
@@ -140,7 +136,17 @@ const ModalComm = props => {
                 }
             ]
         }
-    ]
+    ])
+    const From = useRef();
+    const handleCancel = () => {
+        setisModalVisible(false);
+        setselectedRole([])
+        setroleMenu([])
+        From.current.Rreset();
+    };
+    const open = value => {
+        setisModalVisible(value);
+    };
     const passwordValidate = ({ getFieldValue }) => ({
         validator(_, value) {
             let confirmPasswords = getFieldValue("confirmPassword");
@@ -189,14 +195,14 @@ const ModalComm = props => {
         let res = await userDetailed({ id });
         let dataItem = res.data.data
         dataItem.role = dataItem.role.split(',')
-        // console.log(dataItem.role)
+        setselectedRole(dataItem.role)
+        setroleMenu(dataItem.role_menu.split(','))
         setFieldsValue(dataItem);
     };
     //获取权限列表
     const getRoleData = async () => {
         let res = await getRole()
         setoptionsWithDisabled(res.data.data)
-        // console.log(res)
     }
     //选中d的权限
     const onChange = (value) => {
@@ -214,12 +220,23 @@ const ModalComm = props => {
 
         }
     }));
+    //获取选中的菜单权限
+    const getPermissionsList = () => {
+        const menuData = props.PermissionsList
+        let arr = []
+        for (let key in menuData) {
+            console.log(menuData[key])
+            arr = [...arr, ...menuData[key]]
+        }
+
+        return arr
+    }
     //表单提交(添加)
     const onFinish = async value => {
         const data = value;
         data.password = CryptoJs.MD5(data.password).toString();
         data.role = selectedRole.join(',')
-        // return false
+        data.role_menu = getPermissionsList().join(',')
         delete data.confirmPassword;
         const res = await userAdd(data);
         message.success(res.data.message);
@@ -232,6 +249,7 @@ const ModalComm = props => {
         const data = value;
         data.password = CryptoJs.MD5(data.password).toString();
         data.role = selectedRole.join(',')
+        data.role_menu = getPermissionsList().join(',')
         delete data.confirmPassword;
         data.id = userId
         const res = await userEdit(data);
@@ -304,19 +322,27 @@ const ModalComm = props => {
                     <Checkbox.Group
                         options={optionsWithDisabled}
                         onChange={onChange}
+                        value={selectedRole}
                     />
                 </div>
                 <div ref="menuAuthority">
                     {
-                        menuRoleList.map(item=>{
-                          return <CheckboxCom data={item} key={item.value}></CheckboxCom>
+                        menuRoleList.map(item => {
+                            return <CheckboxCom data={item} key={item.value} roleMenu={roleMenu}></CheckboxCom>
                         })
                     }
-                   
-              </div>
+
+                </div>
             </FromCommon>
         </Modal>
     );
 };
-
-export default ModalComm;
+const mapStateToProps = (state) => {
+    return {
+        PermissionsList: state.userData.selectedPermissions
+    }
+}
+export default connect(
+    mapStateToProps,
+    null
+)(withRouter(ModalComm))

@@ -10,26 +10,36 @@ const CheckboxCom = (props) => {
     const [indeterminate, setindeterminate] = useState(false)
     const [checkedList, setcheckedList] = useState([])
     const [plainOptions, setplainOptions] = useState(props.data.child_item)
-    const { label, value, child_item } = props.data
+    const { label, value, child_item} = props.data
     useEffect(() => {
-
-        props.actions.setMemuPermissions(checkedList)
-
+        setMemuPermissionsData()
+        onChange(checkedList)
+        return ()=>{
+            clearMemuPermissionsData() 
+        }
     }, [checkedList])
     useEffect(() => {
-        console.log(props.PermissionsList)
-    }, [])
+        let arr=props.roleMenu.filter(item=>item.indexOf(value)>=0)
+        setcheckedList(arr)
+    }, [props.roleMenu])
+    //监听选中的权限，存入redux
     const setMemuPermissionsData = () => {
+        // console.log(checkedList)
         const StoreChecked = props.PermissionsList
         if (!StoreChecked[value]) { StoreChecked[value] = {} }
         //存入选中的权限
         if (checkedList.length > 0) {
-
+            StoreChecked[value]=checkedList
         }
         //删除数据
         if (checkedList.length === 0) {
             delete StoreChecked[value]
         }
+        props.actions.setMemuPermissions(StoreChecked)
+    }
+    //页面关闭时，清除redux中存的菜单权限
+    const clearMemuPermissionsData=()=>{
+        props.actions.setMemuPermissions({})
     }
     const onCheckAllChange = (e) => {
         setindeterminate(false)
