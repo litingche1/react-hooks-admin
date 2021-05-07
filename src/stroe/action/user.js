@@ -49,14 +49,14 @@ export const accountLogin = (data) => dispatch => {
     })
 
 }
-//判断用户菜单权限
+//根据用户菜单判断用户菜单权限
 export const hasPermission = (menu, router) => {
     if (router.key && router.key.length > 0) {
         let menuData=menu.map(item=>`/index${item}`)
         return menuData.includes(router.key)
     }
 }
-//获取用户角色
+//获取用户菜单权限
 export const getRoleList = () => dispatch => {
     return getRole().then(res => {
         if (res.data.resCode === 0) {
