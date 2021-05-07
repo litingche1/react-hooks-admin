@@ -70,10 +70,10 @@ export const getRoleList = () => dispatch => {
                 router = Router
             } else {
                 //遍历菜单路由，过滤登录的用户拥有的菜单 
-                router = Router.filter(item => {
+                router = Router.filter(item => {//第一层菜单判断
                     if (hasPermission(menu, item)) {
                         if (item.child && item.child.length > 0) {
-                            item.child = item.child.filter(elem => {
+                            item.child = item.child.filter(elem => {//第二层菜单判断
                                 if (hasPermission(menu, elem)) {
                                     return elem
                                 }
