@@ -31,12 +31,12 @@ export const setRole = (data) => {
         data
     }
 }
-//判断用户菜单权限
-export const hasPermission = (roleList, router) => {
-    if (router.role && router.role.length > 0) {
-        return roleList.some(elm => router.role.indexOf(elm) >= 0)
-    }
-}
+// //判断用户菜单权限
+// export const hasPermission = (roleList, router) => {
+//     if (router.role && router.role.length > 0) {
+//         return roleList.some(elm => router.role.indexOf(elm) >= 0)
+//     }
+// }
 //登录逻辑
 export const accountLogin = (data) => dispatch => {
     return Login(data).then(res => {
@@ -49,23 +49,32 @@ export const accountLogin = (data) => dispatch => {
     })
 
 }
+//判断用户菜单权限
+export const hasPermission = (menu, router) => {
+    if (router.key && router.key.length > 0) {
+        let menuData=menu.map(item=>`/index${item}`)
+        return menuData.includes(router.key)
+    }
+}
 //获取用户角色
 export const getRoleList = () => dispatch => {
     return getRole().then(res => {
         if (res.data.resCode === 0) {
             //获取用户权限列表
-            const roleList = res.data.data.role.split(',')
+            const menu = res.data.data.menu&&res.data.data.menu.split(',')
             let router = []
+        
             //判断是否是超级管理员
-            if (roleList.indexOf('admin') >= 0) {
+            if (!res.data.data.menu) {
+          
                 router = Router
             } else {
                 //遍历菜单路由，过滤登录的用户拥有的菜单 
                 router = Router.filter(item => {
-                    if (hasPermission(roleList, item)) {
+                    if (hasPermission(menu, item)) {
                         if (item.child && item.child.length > 0) {
                             item.child = item.child.filter(elem => {
-                                if (hasPermission(roleList, elem)) {
+                                if (hasPermission(menu, elem)) {
                                     return elem
                                 }
                             })
@@ -83,3 +92,37 @@ export const getRoleList = () => dispatch => {
         console.log(err)
     })
 }
+// //获取用户角色
+// export const getRoleList = () => dispatch => {
+//     return getRole().then(res => {
+//         if (res.data.resCode === 0) {
+//             //获取用户权限列表
+//             const roleList = res.data.data.role.split(',')
+//             let router = []
+//             //判断是否是超级管理员
+//             if (roleList.indexOf('admin') >= 0) {
+//                 router = Router
+//             } else {
+//                 //遍历菜单路由，过滤登录的用户拥有的菜单 
+//                 router = Router.filter(item => {
+//                     if (hasPermission(roleList, item)) {
+//                         if (item.child && item.child.length > 0) {
+//                             item.child = item.child.filter(elem => {
+//                                 if (hasPermission(roleList, elem)) {
+//                                     return elem
+//                                 }
+//                             })
+//                             return item
+//                         }
+//                         return item
+//                     }
+//                 })
+
+
+//             }
+//             dispatch(setRole(router))
+//         }
+//     }).catch(err => {
+//         console.log(err)
+//     })
+// }

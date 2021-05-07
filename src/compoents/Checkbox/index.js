@@ -29,7 +29,9 @@ const CheckboxCom = (props) => {
         if (!StoreChecked[value]) { StoreChecked[value] = {} }
         //存入选中的权限
         if (checkedList.length > 0) {
-            StoreChecked[value]=checkedList
+            let checkedListData=JSON.parse(JSON.stringify(checkedList))
+            checkedListData.unshift(value)
+            StoreChecked[value]=checkedListData
         }
         //删除数据
         if (checkedList.length === 0) {
@@ -58,7 +60,7 @@ const CheckboxCom = (props) => {
     const onChange = (value) => {
         //全选，全不选，选中一部分
         const selectedNumber = value.length
-        const all = child_item.length
+        const all = child_item.length*1+1
         //全选
         if (all === selectedNumber) {
             setcheckAll(true)

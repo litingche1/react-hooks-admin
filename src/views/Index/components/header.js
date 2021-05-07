@@ -10,7 +10,6 @@ const Header = props => {
     const history = useHistory()
     //用户退出登录
     const LogOut=()=>{
-      console.log(9999)
       removeToken()
       removeUsername()
       history.push('/')

@@ -108,31 +108,31 @@ const ModalComm = props => {
     const [menuRoleList, setmenuRoleList] = useState([
         {
             label: '用户管理',
-            value: '/user/',
+            value: '/user',
             defaultValue:[],
             child_item: [
                 {
                     label: '用户列表',
-                    value: '/user/list/',
+                    value: '/user/list',
                 },
                 {
                     label: '添加用户',
-                    value: '/user/add/',
+                    value: '/user/add',
                 }
             ]
         },
         {
             label: '部门管理',
-            value: '/department/',
+            value: '/department',
             defaultValue:[],
             child_item: [
                 {
                     label: '部门列表',
-                    value: '/department/list/',
+                    value: '/department/list',
                 },
                 {
                     label: '添加部门',
-                    value: '/department/add/',
+                    value: '/department/add',
                 }
             ]
         }
